@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "energy-dashboard",
-      "runtimeExecutable": "python3",
+      "runtimeExecutable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
       "runtimeArgs": ["app.py"],
       "port": 8050
     }
