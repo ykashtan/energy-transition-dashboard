@@ -984,49 +984,70 @@ def investment_regional_bars(investment_df: pd.DataFrame) -> go.Figure:
     return fig
 
 
-def subsidies_top_countries(subsidies_df: pd.DataFrame, n: int = 12) -> go.Figure:
+def subsidies_top_countries(imf_subsidies_df: pd.DataFrame, n: int = 12) -> go.Figure:
     """
     Horizontal bar chart of top countries by fossil fuel subsidies (latest year).
-    Source: IEA Fossil Fuel Subsidies Database.
+    Uses IMF data (explicit + implicit, including underpriced externalities).
+    Source: IMF CPAT Fossil Fuel Subsidies Database.
     """
-    if subsidies_df.empty:
+    if imf_subsidies_df.empty:
         fig = go.Figure()
         fig.add_annotation(text="Subsidies data not available", x=0.5, y=0.5,
                            xref="paper", yref="paper", showarrow=False)
         fig.update_layout(height=380, paper_bgcolor=PAPER_BG, plot_bgcolor=PLOT_BG)
         return fig
 
-    totals = subsidies_df[
-        (subsidies_df["product"] == "Total") &
-        (subsidies_df["iso3"] != "WORLD")
-    ]
-    latest_yr = totals["year"].max()
-    latest = totals[totals["year"] == latest_yr].nlargest(n, "subsidy_million_usd")
-    latest = latest.sort_values("subsidy_million_usd", ascending=True)
+    totals = imf_subsidies_df[imf_subsidies_df["subsidy_type"] == "total"]
+    latest_yr = int(totals["year"].max())
+    latest = totals[totals["year"] == latest_yr].nlargest(n, "subsidy_billion_usd")
+    latest = latest.sort_values("subsidy_billion_usd", ascending=True)
 
-    # Use country_name from subsidies data
+    # Stacked bar: explicit (red) + implicit (orange)
+    explicit = imf_subsidies_df[
+        (imf_subsidies_df["subsidy_type"] == "explicit") &
+        (imf_subsidies_df["year"] == latest_yr)
+    ].set_index("iso3")["subsidy_billion_usd"]
+    implicit = imf_subsidies_df[
+        (imf_subsidies_df["subsidy_type"] == "implicit") &
+        (imf_subsidies_df["year"] == latest_yr)
+    ].set_index("iso3")["subsidy_billion_usd"]
+
+    latest_exp = latest["iso3"].map(explicit).fillna(0)
+    latest_imp = latest["iso3"].map(implicit).fillna(0)
+
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
         y=latest["country_name"],
-        x=latest["subsidy_million_usd"] / 1000,  # Convert to billions
+        x=latest_exp.values,
+        name="Explicit (price controls)",
         orientation="h",
         marker_color="#dc3545",
-        hovertemplate="%{y}: $%{x:.1f}B<extra>Fossil Fuel Subsidies</extra>",
+        hovertemplate="%{y}: $%{x:.1f}B explicit<extra></extra>",
+    ))
+    fig.add_trace(go.Bar(
+        y=latest["country_name"],
+        x=latest_imp.values,
+        name="Implicit (underpriced externalities)",
+        orientation="h",
+        marker_color="#ff9800",
+        hovertemplate="%{y}: $%{x:.0f}B implicit<extra></extra>",
     ))
 
     fig.update_layout(
+        barmode="stack",
         title=dict(
-            text=f"Fossil Fuel Subsidies by Country ({int(latest_yr)})",
+            text=f"Fossil Fuel Subsidies by Country ({latest_yr}, IMF)",
             font=dict(size=14, family="Inter, Helvetica Neue, Arial, sans-serif"),
         ),
-        xaxis=dict(title="Billion USD (2024 real)", gridcolor=GRID_COLOR),
+        xaxis=dict(title="Billion USD (2021 real)", gridcolor=GRID_COLOR),
         yaxis=dict(title=""),
-        height=400,
+        height=440,
         margin=dict(l=130, r=24, t=62, b=40),
         paper_bgcolor=PAPER_BG,
         plot_bgcolor=PLOT_BG,
         font=CHART_FONT,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
 
     return fig

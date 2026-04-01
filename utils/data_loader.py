@@ -160,6 +160,14 @@ def get_subsidy_indicators() -> pd.DataFrame:
     return _load("subsidy_indicators.parquet")
 
 
+def get_imf_subsidies() -> pd.DataFrame:
+    """Return IMF fossil fuel subsidies (explicit + implicit) by country, 2015-2024.
+    Covers 186 countries. Includes underpriced externalities (air pollution, climate).
+    Source: IMF CPAT database.
+    """
+    return _load("imf_subsidies.parquet")
+
+
 def get_ccus_projects() -> pd.DataFrame:
     """Return processed CCUS project data (IEA database).
     Run scripts/process_ccus.py to generate.
@@ -272,6 +280,7 @@ def preload_all():
         "predictions.parquet", "damages.parquet", "lancet_heat_mortality.parquet",
         "investment.parquet", "subsidies.parquet", "subsidy_indicators.parquet",
         "ccus_projects.parquet", "vulnerability.parquet", "climate_disasters.parquet",
+        "imf_subsidies.parquet",
     ]
     for f in files:
         _load(f)

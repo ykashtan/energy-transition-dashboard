@@ -28,6 +28,7 @@ from utils.data_loader import (
     get_kpis, get_emissions, get_capacity, get_scenarios,
     get_energy_mix, get_nze_milestones, get_costs, get_predictions,
     get_health, get_latest_year_map, get_investment, get_subsidies,
+    get_imf_subsidies,
     get_heat_deaths_reference, get_lancet_heat_mortality,
     get_climate_disasters,
 )
@@ -122,7 +123,7 @@ def _build_regional_investment_fig():
 def _build_subsidies_countries_fig():
     """Build the top subsidized countries chart."""
     try:
-        return subsidies_top_countries(get_subsidies())
+        return subsidies_top_countries(get_imf_subsidies())
     except Exception as exc:
         import plotly.graph_objects as go
         fig = go.Figure()
@@ -777,9 +778,9 @@ def layout(**kwargs):
                         className="display-5 fw-bold mt-4 mb-1",
                     ),
                     html.P(
-                        "A real-time birds-eye view of where we are, where we need to be, "
-                        "and how fast we're moving — from emissions and clean energy to costs, "
-                        "investment, and the human health stakes.",
+                        "Tracking emissions against climate targets, clean energy deployment, "
+                        "fossil fuel subsidies, cost trends, and the health burden of air pollution "
+                        "— country by country, year by year.",
                         className="lead text-muted mb-2",
                     ),
                     # Honesty note: momentum is real but adequacy is not
@@ -1053,24 +1054,23 @@ def layout(**kwargs):
                     ),
                     " (investment); ",
                     html.A(
+                        "IMF CPAT Fossil Fuel Subsidies Database",
+                        href="https://www.imf.org/en/Topics/climate-change/energy-subsidies",
+                        target="_blank", className="alert-link",
+                    ),
+                    " (per-country subsidies, 186 countries); ",
+                    html.A(
                         "IEA Fossil Fuel Subsidies Database",
                         href="https://www.iea.org/data-and-statistics/data-product/fossil-fuel-subsidies-database",
                         target="_blank", className="alert-link",
                     ),
-                    " (explicit subsidies); ",
-                    html.A(
-                        "IMF 2023",
-                        href="https://www.imf.org/en/Topics/climate-change/energy-subsidies",
-                        target="_blank", className="alert-link",
-                    ),
-                    " ($7T/yr including implicit costs). "
+                    " (explicit subsidy time series). "
                     "All investment in 2024 real USD. ",
                     html.Br(),
                     html.Small(
-                        "Note: IEA subsidy data uses the price-gap method (consumer price vs. supply cost), "
-                        "covering 48 countries with direct price subsidies. The USA and most OECD nations "
-                        "provide fossil fuel support primarily through production-side tax measures, "
-                        "which are tracked separately by the OECD and IMF.",
+                        "Note: IMF totals include both explicit subsidies (direct price support) and "
+                        "implicit subsidies (underpriced externalities: air pollution, climate damages, "
+                        "forgone tax revenue). Explicit subsidies alone total ~$636B globally (IEA 2024).",
                         className="text-muted",
                     ),
                 ], color="secondary", className="small py-2 mt-2"),
