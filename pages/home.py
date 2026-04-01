@@ -1323,6 +1323,14 @@ def layout(**kwargs):
                             "Sum of above three lines. Uses conservative PM2.5 estimate.",
                         ]),
                     ], className="mb-0 ps-3 mt-1"),
+                    html.Small(
+                        "Note: the world map\u2019s Health layer uses IMF CPAT country-specific "
+                        "death counts (~2.6M/yr globally), which are higher than the McDuffie "
+                        "time series above (~1.3M) because they include household fossil fuel "
+                        "pollution and ozone. The same IMF mortality data underlies the air "
+                        "pollution component of the subsidy estimates. ",
+                        className="text-muted",
+                    ),
                     html.A("See methodology", href="/methodology", className="alert-link mt-1"),
                 ], color="secondary", className="small py-2 mt-2"),
                 html.Div(

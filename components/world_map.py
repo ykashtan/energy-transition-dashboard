@@ -20,7 +20,7 @@ import pandas as pd
 from utils.data_loader import (
     get_emissions, get_energy_mix, get_finance, get_health, get_damages,
     get_vulnerability, get_climate_disasters, get_callahan_damages,
-    get_latest_year_map,
+    get_latest_year_map, get_imf_health_reference,
 )
 
 
@@ -161,31 +161,34 @@ METRIC_REGISTRY = {
         ],
         "reversescale": False,
         "zmin": 0,
-        "zmax": 8,  # most countries 0-8%; extreme outliers like China ~5-6%
+        "zmax": 12,  # IMF data: most countries 0-10%; China ~10%
         "colorbar_title": "% of all<br>deaths",
         "description": (
-            "Fossil fuel PM2.5 deaths as a share of all deaths in each country. "
-            "Deaths are attributed to fossil fuel combustion only (~33% of all ambient "
-            "PM2.5 deaths globally, ~1.27M/yr; McDuffie et al. 2021). PM2.5 only — does "
-            "not include NO₂, SO₂, or ozone mortality. PM2.5 exposure in hover is from ALL "
-            "sources (not fossil-fuel only). Source: McDuffie et al. 2021; population from OWID."
+            "Fossil fuel air pollution deaths as a share of all deaths in each country. "
+            "Country-specific death counts from the IMF CPAT database (2024), which uses "
+            "GBD concentration-response functions with source-specific attribution. "
+            "Includes ambient PM2.5, household fossil fuel pollution, and ozone mortality "
+            "(\u223c2.6M/yr globally). PM2.5 exposure in hover is from ALL sources."
         ),
         "dataset": "health_enriched",
         "secondary": [
-            ("fossil_fuel_deaths", "Fossil fuel PM2.5 deaths", ",.0f", "thousands/yr"),
-            ("climate_disaster_deaths", "Weather/climate disaster deaths (cumul. 2000–2025)", ",.0f", ""),
+            ("fossil_fuel_deaths", "Fossil fuel deaths (IMF CPAT)", ",.0f", "thousands/yr"),
+            ("climate_disaster_deaths", "Weather/climate disaster deaths (cumul. 2000\u20132025)", ",.0f", ""),
             ("climate_disaster_death_pct_all", "Weather/climate disaster deaths (% of all deaths/yr)", ".3f", "%"),
-            ("pm25_annual_mean_ugm3", "PM2.5 exposure (total, all sources)", ".1f", "μg/m³"),
+            ("pm25_annual_mean_ugm3", "PM2.5 exposure (total, all sources)", ".1f", "\u03bcg/m\u00b3"),
         ],
         "health_caveat": (
-            "Fossil fuel combustion (coal, oil, gas) accounts for ~33% of global "
-            "ambient PM2.5 deaths (~1.3M of ~4.9M; McDuffie et al. 2021). "
-            "Higher estimates (5–9M; Vohra et al. 2021, Lelieveld et al. 2023) use "
-            "different concentration-response functions. PM2.5 exposure shown is from "
-            "ALL sources (not fossil-fuel only). Does not include NO₂, SO₂, or ozone "
-            "mortality. Climate disaster deaths (EM-DAT) are cumulative since 2000."
+            "Death counts from IMF CPAT (\u223c2.6M/yr globally) are higher than "
+            "McDuffie et al. 2021 (\u223c1.3M) because IMF includes household fossil fuel "
+            "pollution and ozone in addition to ambient PM2.5. Both use GBD-based "
+            "concentration-response functions but with different source attribution methods. "
+            "Even higher estimates (5\u20139M; Vohra 2021, Lelieveld 2023) use alternative CRFs. "
+            "PM2.5 exposure shown is from ALL sources. "
+            "Climate disaster deaths (EM-DAT) are cumulative since 2000. "
+            "Note: the same IMF death counts underlie the air pollution component of "
+            "the IMF fossil fuel subsidy estimates."
         ),
-        "source_url": "https://doi.org/10.1038/s41467-021-23853-y",
+        "source_url": "https://www.imf.org/en/Topics/climate-change/energy-subsidies",
     },
     "investment": {
         "label": "Carbon Pricing & Investment",
@@ -234,10 +237,13 @@ METRIC_REGISTRY = {
         "zmax": 2,  # ±2% of GDP/yr; diverging scale centered on 0
         "colorbar_title": "% GDP/yr<br>(warming<br>impact)",
         "description": (
-            "Historical economic impact of warming (1990–2014) using the Burke et al. "
-            "(2015) temperature-GDP damage function applied to observed country-level "
+            "Historical economic impact of warming (1990\u20132014) using the Burke et al. "
+            "(2015) temperature\u2013GDP damage function applied to observed country-level "
             "temperature changes. Hot countries lose GDP; cold countries gain. Annualized "
-            "average as % of current GDP. Based on top 20 emitters (~90% of global emissions). "
+            "average as % of current GDP. Based on top 20 emitters (\u223c90% of global emissions). "
+            "Note: this is a different methodology than the IMF\u2019s social cost of carbon "
+            "($\u223c78/tCO\u2082, uniform globally) used in the subsidies section. Burke captures "
+            "country-specific climate vulnerability; the IMF applies a uniform damage estimate. "
             "Source: Callahan & Mankin (2022), Climatic Change."
         ),
         "dataset": "callahan_damages",
@@ -330,16 +336,40 @@ _CRUDE_DEATH_RATE_PER_1000 = 8.1
 
 
 def _build_health_enriched() -> pd.DataFrame:
-    """Build enriched health dataset with death fractions and climate disaster deaths."""
+    """Build enriched health dataset with death fractions and climate disaster deaths.
+
+    Uses IMF CPAT country-specific fossil fuel death counts (broader scope:
+    ambient + household PM2.5 + ozone) where available, with McDuffie-based
+    estimates as fallback. The IMF data covers 177 countries with
+    country-specific attribution rather than applying a uniform 33% fraction.
+    """
     health = get_health()
     emissions = get_emissions()
     disasters = get_climate_disasters()
+    imf_health = get_imf_health_reference()
 
     if health.empty:
         return health
 
-    # Get latest fossil_fuel_deaths per country from health data
+    # Get latest McDuffie-based fossil_fuel_deaths per country (thousands)
     health_latest = get_latest_year_map(health, "fossil_fuel_deaths")
+    # Keep McDuffie estimate for comparison
+    health_latest.rename(columns={"fossil_fuel_deaths": "fossil_fuel_deaths_mcduffie"}, inplace=True)
+
+    # Merge IMF country-specific death counts (absolute numbers, not thousands)
+    if not imf_health.empty:
+        imf_cols = imf_health[["iso3", "imf_fossil_fuel_deaths"]].copy()
+        # Convert IMF absolute deaths to thousands (to match dashboard convention)
+        imf_cols["imf_fossil_fuel_deaths_thous"] = imf_cols["imf_fossil_fuel_deaths"] / 1000
+        health_latest = health_latest.merge(
+            imf_cols[["iso3", "imf_fossil_fuel_deaths_thous"]], on="iso3", how="left"
+        )
+        # Use IMF where available, McDuffie as fallback
+        health_latest["fossil_fuel_deaths"] = health_latest["imf_fossil_fuel_deaths_thous"].fillna(
+            health_latest["fossil_fuel_deaths_mcduffie"]
+        )
+    else:
+        health_latest["fossil_fuel_deaths"] = health_latest["fossil_fuel_deaths_mcduffie"]
 
     # Add PM2.5 exposure
     if "pm25_annual_mean_ugm3" in health.columns:

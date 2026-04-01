@@ -580,6 +580,21 @@ def layout(**kwargs):
                 className="small",
             ),
 
+            dbc.Alert([
+                html.Strong("Cross-reference \u2014 shared data with Health and Damages sections: "),
+                "The IMF\u2019s implicit subsidies are built from two components that also appear "
+                "elsewhere on this dashboard: (1) ", html.Strong("Air pollution mortality"),
+                " \u2014 the IMF uses GBD-based country-specific fossil fuel death counts "
+                "(\u223c2.6M/yr globally), which are also used on the Health map. These are "
+                "higher than McDuffie\u2019s \u223c1.3M because the IMF includes household fossil "
+                "fuel pollution and ozone, not just ambient PM2.5. (2) ",
+                html.Strong("Climate damages"), " \u2014 the IMF values CO\u2082 at "
+                "\u223c$78/tCO\u2082 (2025 USD), applied uniformly globally. "
+                "The Damages map instead uses Burke et al.\u2019s country-specific empirical "
+                "damage function, which shows much larger losses for tropical countries. "
+                "These are complementary approaches, not conflicting ones.",
+            ], color="info", className="small py-2"),
+
             # --- 2e: Health & Environmental Justice ---
             html.H4("Health & Environmental Justice",
                      className="fw-bold mt-4 mb-2 text-primary"),
@@ -619,6 +634,19 @@ def layout(**kwargs):
                 "fossil) is a separate metric. We display it alongside the fossil-specific "
                 "estimates but never conflate them.",
             ], color="warning", className="small py-2"),
+
+            html.H6("Health map: IMF country-specific death counts", className="fw-bold mt-3"),
+            html.P([
+                "The world map\u2019s Health layer uses ",
+                html.Strong("IMF CPAT country-specific fossil fuel death counts"),
+                " (\u223c2.6M/yr globally, 177 countries) rather than McDuffie\u2019s uniform "
+                "33% fraction. The IMF estimates are higher because they include household "
+                "fossil fuel pollution and ozone mortality in addition to ambient PM2.5. "
+                "Both use GBD-based concentration-response functions but with different "
+                "source attribution methods. The same IMF death counts underlie the air "
+                "pollution component of the IMF fossil fuel subsidy estimates shown in the "
+                "Investment & Subsidies section.",
+            ], className="small"),
 
             html.H6("Ambient vs household air pollution", className="fw-bold mt-3"),
             html.P([
@@ -708,6 +736,18 @@ def layout(**kwargs):
                 "countries may see modest gains \u2014 a pattern robust across damage models "
                 "but with uncertain magnitudes.",
             ], color="warning", className="small py-2"),
+            dbc.Alert([
+                html.Strong("Cross-reference \u2014 IMF social cost of carbon: "),
+                "The IMF\u2019s fossil fuel subsidy estimates use a social cost of carbon of "
+                "\u223c$78/tCO\u2082 (2025 USD, starting at $60/t in 2020 + $1.50/yr), applied "
+                "uniformly to all countries. This is a fundamentally different approach from "
+                "Burke et al.\u2019s empirical damage function, which finds country-specific "
+                "impacts (e.g., India loses \u223c37% of GDP by 2050 under RCP8.5, while some "
+                "cold countries gain). The IMF\u2019s SCC is also well below current academic "
+                "estimates (\u223c$185\u2013190/tCO\u2082; Rennert et al. 2022, US EPA 2023), "
+                "meaning the climate component of IMF subsidies is likely a substantial "
+                "underestimate.",
+            ], color="info", className="small py-2"),
 
             html.H6("Climate disasters (EM-DAT)", className="fw-bold mt-3"),
             html.P([

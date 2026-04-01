@@ -168,6 +168,14 @@ def get_imf_subsidies() -> pd.DataFrame:
     return _load("imf_subsidies.parquet")
 
 
+def get_imf_health_reference() -> pd.DataFrame:
+    """Return IMF CPAT per-country fossil fuel death counts (2024 snapshot).
+    Broader scope than McDuffie (includes household + ozone mortality).
+    Source: IMF CPAT database, 'Baseline mortality, fossil fuels'.
+    """
+    return _load("imf_health_reference.parquet")
+
+
 def get_ccus_projects() -> pd.DataFrame:
     """Return processed CCUS project data (IEA database).
     Run scripts/process_ccus.py to generate.
@@ -280,7 +288,7 @@ def preload_all():
         "predictions.parquet", "damages.parquet", "lancet_heat_mortality.parquet",
         "investment.parquet", "subsidies.parquet", "subsidy_indicators.parquet",
         "ccus_projects.parquet", "vulnerability.parquet", "climate_disasters.parquet",
-        "imf_subsidies.parquet",
+        "imf_subsidies.parquet", "imf_health_reference.parquet",
     ]
     for f in files:
         _load(f)
