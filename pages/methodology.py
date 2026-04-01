@@ -557,14 +557,15 @@ def layout(**kwargs):
                 "(2) global warming damages (social cost of carbon), "
                 "(3) other local externalities (traffic congestion, road damage, accidents), and "
                 "(4) forgone consumption tax revenue (below-normal VAT rates on fossil fuels). "
-                "All values in 2021 real USD.",
+                "All values adjusted to 2025 USD (from IMF\u2019s native 2021 USD "
+                "using CPI-U factor \u22481.18).",
             ], className="small"),
             dbc.Alert([
                 html.Strong("Why the numbers are so large: "),
-                "The IMF\u2019s $7.4 trillion global estimate (2024) is dominated by implicit "
+                "The IMF\u2019s \u223c$8.7 trillion global estimate (2024, in 2025 USD) is dominated by implicit "
                 "subsidies (\u223c85% of the total). These are not cash transfers \u2014 they "
                 "represent the economic cost of failing to price externalities. Explicit "
-                "subsidies alone total \u223c$636 billion (IEA 2024). Whether underpriced "
+                "subsidies alone total \u223c$750 billion. Whether underpriced "
                 "externalities should be called \u201csubsidies\u201d is debated, but the IMF "
                 "framework is widely used in policy analysis.",
             ], color="warning", className="small py-2"),
@@ -1073,10 +1074,10 @@ def layout(**kwargs):
                     ], className="small"),
                     html.P([
                         html.Strong("Explicit subsidies: "),
-                        "Consumer price below supply cost (\u223c$636B globally, IEA 2024). ",
+                        "Consumer price below supply cost (\u223c$750B globally, in 2025 USD). ",
                         html.Strong("Implicit subsidies: "),
-                        "Supply cost covered, but externalities unpriced (\u223c$6.8T globally). "
-                        "Total: \u223c$7.4T/yr (2024). Implicit costs include air pollution "
+                        "Supply cost covered, but externalities unpriced (\u223c$8.0T globally). "
+                        "Total: \u223c$8.7T/yr (2024, in 2025 USD). Implicit costs include air pollution "
                         "mortality, climate damages, traffic externalities, and forgone "
                         "consumption tax revenue.",
                     ], className="small"),
@@ -1182,7 +1183,7 @@ def layout(**kwargs):
                     "of underpriced pollution, climate damages, and forgone tax revenue. "
                     "These estimates depend on modelling assumptions (social cost of carbon, "
                     "concentration-response functions for mortality). The explicit subsidy "
-                    "component (\u223c$636B) is more directly observable.",
+                    "component (\u223c$750B in 2025 USD) is more directly observable.",
                 ], className="small mb-2"),
                 html.Li([
                     html.Strong("Carbon price reflects national schemes only: "),

@@ -1070,7 +1070,7 @@ def layout(**kwargs):
                     html.Small(
                         "Note: IMF totals include both explicit subsidies (direct price support) and "
                         "implicit subsidies (underpriced externalities: air pollution, climate damages, "
-                        "forgone tax revenue). Explicit subsidies alone total ~$636B globally (IEA 2024).",
+                        "forgone tax revenue). Explicit subsidies alone total ~$750B globally (2025 USD).",
                         className="text-muted",
                     ),
                 ], color="secondary", className="small py-2 mt-2"),

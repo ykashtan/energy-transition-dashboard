@@ -1040,7 +1040,7 @@ def subsidies_top_countries(imf_subsidies_df: pd.DataFrame, n: int = 12) -> go.F
             text=f"Fossil Fuel Subsidies by Country ({latest_yr}, IMF)",
             font=dict(size=14, family="Inter, Helvetica Neue, Arial, sans-serif"),
         ),
-        xaxis=dict(title="Billion USD (2021 real)", gridcolor=GRID_COLOR),
+        xaxis=dict(title="Billion USD (2025 real)", gridcolor=GRID_COLOR),
         yaxis=dict(title=""),
         height=440,
         margin=dict(l=130, r=24, t=62, b=40),

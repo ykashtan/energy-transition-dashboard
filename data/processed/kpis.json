@@ -174,32 +174,32 @@
   },
 
   "subsidies_global_bn": {
-    "value": 600,
+    "value": 750,
     "unit": "$B/yr",
     "label": "Global fossil fuel subsidies (explicit)",
     "year": 2024,
-    "source": "IEA Fossil Fuel Subsidies Database",
-    "source_url": "https://www.iea.org/data-and-statistics/data-product/fossil-fuel-subsidies-database",
-    "note": "Explicit subsidies only (government price support). IMF estimates ~$7T/yr including implicit costs (unpriced pollution, climate damage).",
+    "source": "IMF CPAT Database (explicit component), adjusted to 2025 USD",
+    "source_url": "https://www.imf.org/en/Topics/climate-change/energy-subsidies",
+    "note": "Explicit subsidies only (direct price support). Adjusted from 2021 to 2025 USD (CPI-U factor 1.18). IMF estimates ~$8.7T/yr including implicit costs.",
     "trend": "\u2191 bad"
   },
   "subsidies_implicit_tn": {
-    "value": 7.0,
+    "value": 8.7,
     "unit": "$T/yr",
     "label": "Total subsidies incl. implicit (IMF)",
-    "year": 2022,
-    "source": "IMF 2023",
+    "year": 2024,
+    "source": "IMF CPAT Database (2025 update), adjusted to 2025 USD",
     "source_url": "https://www.imf.org/en/Topics/climate-change/energy-subsidies",
-    "note": "Includes explicit subsidies plus unpriced externalities (air pollution, climate damage, forgone consumption taxes).",
+    "note": "Includes explicit subsidies plus unpriced externalities (air pollution, climate damage, forgone consumption taxes). Adjusted from 2021 to 2025 USD (CPI-U factor 1.18).",
     "trend": "\u2191 bad"
   },
   "subsidies_top_country": {
     "value": "China",
-    "unit": "($2.8T, IMF)",
+    "unit": "($3.3T, IMF)",
     "label": "Top subsidizer (explicit + implicit)",
     "year": 2024,
-    "source": "IMF CPAT Fossil Fuel Subsidies Database (2025 update)",
-    "note": "IMF definition includes explicit subsidies (price controls) and implicit subsidies (underpriced air pollution, climate damages, forgone tax revenue). China: $2.8T, USA: $1.1T, Russia: $501B, India: $429B. Explicit subsidies alone total ~$636B globally (IEA 2024).",
+    "source": "IMF CPAT Fossil Fuel Subsidies Database (2025 update), adjusted to 2025 USD",
+    "note": "IMF definition includes explicit subsidies (price controls) and implicit subsidies (underpriced air pollution, climate damages, forgone tax revenue). China: $3.3T, USA: $1.3T, Russia: $590B, India: $506B. All values adjusted from 2021 to 2025 USD (CPI-U factor 1.18). Explicit subsidies alone total ~$750B globally.",
     "trend": "\u2191 bad"
   },
 
