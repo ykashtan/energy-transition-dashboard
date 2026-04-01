@@ -164,7 +164,7 @@ def _add_scenario_band(
         line=dict(color=color, width=1.8, dash="dash"),
         hovertemplate=(
             f"{tooltip}"
-            "<br><b>Median: %{{y:.1f}} GtCO₂/yr</b> (%{{x}})"
+            "<br><b>Median: %{y:.1f} GtCO₂/yr</b> (%{x})"
             "<extra></extra>"
         ),
     ))

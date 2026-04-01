@@ -522,7 +522,7 @@ def _build_generation_hero_cards() -> html.Div:
             ("electricity_twh_wind", "Wind", "bi-wind", "text-success", "wind"),
             ("electricity_twh_hydro", "Hydro", "bi-water", "text-info", "hydro"),
             ("electricity_twh_gas", "Gas", "bi-fire", "text-secondary", "gas"),
-            ("electricity_twh_coal", "Coal", "bi-fire", "text-secondary", "coal"),
+            ("electricity_twh_coal", "Coal", "bi-gem", "text-secondary", "coal"),
             ("electricity_twh_nuclear", "Nuclear", "bi-radioactive", "text-purple", "nuclear"),
         ]
 
@@ -1064,7 +1064,15 @@ def layout(**kwargs):
                         target="_blank", className="alert-link",
                     ),
                     " ($7T/yr including implicit costs). "
-                    "All investment in 2024 real USD.",
+                    "All investment in 2024 real USD. ",
+                    html.Br(),
+                    html.Small(
+                        "Note: IEA subsidy data uses the price-gap method (consumer price vs. supply cost), "
+                        "covering 48 countries with direct price subsidies. The USA and most OECD nations "
+                        "provide fossil fuel support primarily through production-side tax measures, "
+                        "which are tracked separately by the OECD and IMF.",
+                        className="text-muted",
+                    ),
                 ], color="secondary", className="small py-2 mt-2"),
             ]),
         ], fluid=False),
@@ -1119,7 +1127,7 @@ def layout(**kwargs):
                     dbc.Col(
                         dbc.Card(dbc.CardBody([
                             html.Div([
-                                html.I(className="bi bi-fire me-1 text-secondary small"),
+                                html.I(className="bi bi-gem me-1 text-secondary small"),
                                 html.Small("New coal LCOE", className="text-muted"),
                             ], className="d-flex align-items-center"),
                             html.Div("$121/MWh", className="fs-3 fw-bold mt-1"),
