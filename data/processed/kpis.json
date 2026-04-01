@@ -194,13 +194,13 @@
     "trend": "\u2191 bad"
   },
   "subsidies_top_country": {
-    "value": "Russia",
-    "unit": "(IEA+OECD)",
-    "label": "Top subsidizer (consumer + production)",
-    "year": 2023,
-    "source": "IISD Fossil Fuel Subsidy Tracker (IEA + OECD data)",
-    "note": "IEA price-gap consumer subsidies. Rankings vary by methodology and year. For 2023 (IISD/IEA+OECD combined): Russia, Germany, Iran, China, Japan among top subsidizers. IMF broad definition (incl. unpriced externalities) ranks China #1 globally. US shows ~$0 under IEA price-gap but ~$18B under OECD production subsidy accounting.",
-    "trend": "\u2192"
+    "value": "China",
+    "unit": "($2.8T, IMF)",
+    "label": "Top subsidizer (explicit + implicit)",
+    "year": 2024,
+    "source": "IMF CPAT Fossil Fuel Subsidies Database (2025 update)",
+    "note": "IMF definition includes explicit subsidies (price controls) and implicit subsidies (underpriced air pollution, climate damages, forgone tax revenue). China: $2.8T, USA: $1.1T, Russia: $501B, India: $429B. Explicit subsidies alone total ~$636B globally (IEA 2024).",
+    "trend": "\u2191 bad"
   },
 
   "predictions_solar_ratio": {
