@@ -1,0 +1,173 @@
+{
+  "latest_year": 2021,
+  "latest_deaths": 558304,
+  "latest_af": 0.83,
+  "avg_3yr_deaths": 599970,
+  "avg_3yr_period": "2019-2021",
+  "time_series": [
+    {
+      "year": 1990,
+      "deaths": 260952,
+      "af": 0.57
+    },
+    {
+      "year": 1991,
+      "deaths": 309995,
+      "af": 0.67
+    },
+    {
+      "year": 1992,
+      "deaths": 318293,
+      "af": 0.68
+    },
+    {
+      "year": 1993,
+      "deaths": 278906,
+      "af": 0.59
+    },
+    {
+      "year": 1994,
+      "deaths": 354884,
+      "af": 0.73
+    },
+    {
+      "year": 1995,
+      "deaths": 398883,
+      "af": 0.82
+    },
+    {
+      "year": 1996,
+      "deaths": 285125,
+      "af": 0.58
+    },
+    {
+      "year": 1997,
+      "deaths": 258013,
+      "af": 0.53
+    },
+    {
+      "year": 1998,
+      "deaths": 574110,
+      "af": 1.17
+    },
+    {
+      "year": 1999,
+      "deaths": 307742,
+      "af": 0.62
+    },
+    {
+      "year": 2000,
+      "deaths": 278617,
+      "af": 0.56
+    },
+    {
+      "year": 2001,
+      "deaths": 287022,
+      "af": 0.57
+    },
+    {
+      "year": 2002,
+      "deaths": 402404,
+      "af": 0.79
+    },
+    {
+      "year": 2003,
+      "deaths": 461538,
+      "af": 0.9
+    },
+    {
+      "year": 2004,
+      "deaths": 329810,
+      "af": 0.64
+    },
+    {
+      "year": 2005,
+      "deaths": 516926,
+      "af": 1.0
+    },
+    {
+      "year": 2006,
+      "deaths": 390253,
+      "af": 0.76
+    },
+    {
+      "year": 2007,
+      "deaths": 425991,
+      "af": 0.83
+    },
+    {
+      "year": 2008,
+      "deaths": 294318,
+      "af": 0.56
+    },
+    {
+      "year": 2009,
+      "deaths": 455614,
+      "af": 0.87
+    },
+    {
+      "year": 2010,
+      "deaths": 721588,
+      "af": 1.37
+    },
+    {
+      "year": 2011,
+      "deaths": 359081,
+      "af": 0.68
+    },
+    {
+      "year": 2012,
+      "deaths": 504462,
+      "af": 0.95
+    },
+    {
+      "year": 2013,
+      "deaths": 458251,
+      "af": 0.86
+    },
+    {
+      "year": 2014,
+      "deaths": 448321,
+      "af": 0.83
+    },
+    {
+      "year": 2015,
+      "deaths": 509489,
+      "af": 0.94
+    },
+    {
+      "year": 2016,
+      "deaths": 676006,
+      "af": 1.23
+    },
+    {
+      "year": 2017,
+      "deaths": 551282,
+      "af": 0.99
+    },
+    {
+      "year": 2018,
+      "deaths": 507062,
+      "af": 0.9
+    },
+    {
+      "year": 2019,
+      "deaths": 701303,
+      "af": 1.24
+    },
+    {
+      "year": 2020,
+      "deaths": 540304,
+      "af": 0.86
+    },
+    {
+      "year": 2021,
+      "deaths": 558304,
+      "af": 0.83
+    }
+  ],
+  "source": "The 2025 report of the Lancet Countdown on health and climate change",
+  "source_url": "https://lancetcountdown.org/2025-report/",
+  "indicator": "Indicator 1.1.5: Heat Related Mortality",
+  "note": "Heat-related mortality attributable to climate change. AN = attributable number of deaths; AF = attributable fraction (%). These are SEPARATE from air pollution deaths. Global estimate only \u2014 not country-level."
+}

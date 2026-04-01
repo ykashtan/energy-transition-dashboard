@@ -1,0 +1,17 @@
+{
+  "source": "Markandya & Wilkinson (2007) Lancet; Sovacool (2008); GBD-based OWID estimates",
+  "owid_url": "https://ourworldindata.org/safest-sources-of-energy",
+  "methodology_note": "These are comparative orders of magnitude derived from lifecycle analysis studies with heterogeneous methodologies. Estimates reflect central tendency across studies; uncertainty spans an order of magnitude for some sources (especially nuclear). Coal estimate dominated by older Chinese plants; modern coal rates lower. Do NOT use these to calculate avoided deaths directly \u2014 see AVOIDED_DEATHS_METHODOLOGY in utils/definitions.py.",
+  "use_guidance": "Present as: 'Coal causes roughly 1,000\u00d7 more deaths per unit of energy than wind/solar.' Always link to OWID methodology. Never present as precision mortality rates.",
+  "values": {
+    "coal": 24.6,
+    "oil": 18.4,
+    "gas": 2.8,
+    "nuclear": 0.07,
+    "wind": 0.04,
+    "solar": 0.02,
+    "hydro": 0.02,
+    "biomass": 4.5,
+    "other": 2.0
+  }
+}

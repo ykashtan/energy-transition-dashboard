@@ -1,0 +1,293 @@
+{
+  "atmospheric_co2_ppm": {
+    "value": 425.64,
+    "unit": "ppm",
+    "label": "Atmospheric CO\u2082 concentration",
+    "year": 2025,
+    "previous_value": 422.79,
+    "pct_change": 0.7,
+    "source": "NOAA (global mean surface CO\u2082, not Mauna Loa alone)",
+    "note": "Global mean; Mauna Loa single-station value differs slightly.",
+    "trend": "\u2191 bad"
+  },
+  "co2_fossil_gt": {
+    "value": 37.4,
+    "unit": "GtCO\u2082/yr",
+    "label": "Fossil CO\u2082 emissions",
+    "year": 2024,
+    "previous_value": 37.0,
+    "pct_change": 1.1,
+    "trend": "\u2191 bad",
+    "source": "OWID (GCB)",
+    "note": "Fossil fuel CO\u2082 only. Does not include land-use change or other GHGs.",
+    "definition_key": "co2_fossil_mt"
+  },
+  "ghg_total_gtco2e": {
+    "value": 54.41,
+    "unit": "GtCO\u2082e/yr",
+    "label": "Total GHG emissions",
+    "year": 2024,
+    "previous_value": 54.07,
+    "pct_change": 0.6,
+    "trend": "\u2191 bad",
+    "source": "OWID (Jones et al. 2025, based on EDGAR v8.0 + GCB)",
+    "note": "All greenhouse gases (CO\u2082, CH\u2084, N\u2082O, F-gases) as CO\u2082e using AR6 GWP100 values. EXCLUDES land-use change and forestry (LULUCF). Including LULUCF adds ~4\u20135 GtCO\u2082e/yr (UNEP EGR 2024 reports ~59 GtCO\u2082e with LULUCF). Different sources report different totals due to: LULUCF inclusion, GWP generation (AR5 vs AR6), gas coverage, and inventory methodology (EDGAR vs UNFCCC vs PRIMAP).",
+    "definition_key": "ghg_total_mtco2e"
+  },
+  "renewable_share_electricity_pct": {
+    "value": 31.7,
+    "unit": "%",
+    "label": "Renewable share of electricity generation",
+    "year": 2024,
+    "previous_value": 29.4,
+    "pct_change": 7.8,
+    "source": "OWID (Ember/IRENA)",
+    "note": "Denominator: total electricity generation (~30% globally). NOT share of final energy (~13%).",
+    "definition_key": "renewable_share_electricity_pct",
+    "trend": "\u2191 good"
+  },
+  "capacity_solar_gw": {
+    "value": 1865.0,
+    "unit": "GW",
+    "label": "Solar capacity",
+    "year": 2024,
+    "previous_value": 1413.0,
+    "pct_change": 32.1,
+    "trend": "\u2191 good",
+    "source": "IRENA Renewable Energy Statistics 2025"
+  },
+  "capacity_wind_gw": {
+    "value": 1133.0,
+    "unit": "GW",
+    "label": "Wind capacity",
+    "year": 2024,
+    "previous_value": 1018.0,
+    "pct_change": 11.3,
+    "trend": "\u2191 good",
+    "source": "IRENA Renewable Energy Statistics 2025"
+  },
+  "capacity_total_renewable_gw": {
+    "value": 4448.0,
+    "unit": "GW",
+    "label": "Total renewable electricity capacity",
+    "year": 2024,
+    "previous_value": 3861.0,
+    "pct_change": 15.1,
+    "trend": "\u2191 good",
+    "source": "IRENA Renewable Energy Statistics 2025"
+  },
+  "temperature_anomaly_c": {
+    "value": 1.55,
+    "unit": "\u00b0C above 1850-1900",
+    "label": "Global temperature anomaly",
+    "year": 2025,
+    "previous_value": 1.54,
+    "pct_change": 0.6,
+    "trend": "\u2191 bad",
+    "source": "HadCRUT5 (Met Office / UEA), rebased to 1850-1900",
+    "note": "Baseline: 1850-1900 (IPCC AR6 standard). 2025 value is preliminary (partial-year HadCRUT5 data).",
+    "definition_key": "temperature_anomaly"
+  },
+  "clean_energy_investment_t": {
+    "value": 2.15,
+    "unit": "$T/yr",
+    "label": "Clean energy investment",
+    "year": 2025,
+    "previous_value": 2.03,
+    "pct_change": 5.9,
+    "trend": "\u2191 good",
+    "source": "IEA World Energy Investment 2025",
+    "note": "Includes renewables, nuclear, efficiency, networks, storage, EVs.",
+    "definition_key": "clean_energy_investment"
+  },
+  "deaths_ambient_pm25_m": {
+    "value": 4.9,
+    "unit": "million/yr",
+    "label": "Deaths from all outdoor PM2.5",
+    "year": 2023,
+    "previous_value": 4.73,
+    "pct_change": 3.6,
+    "trend": "\u2191 bad",
+    "source": "IHME Global Burden of Disease 2023 (ambient PM2.5)",
+    "source_url": "https://vizhub.healthdata.org/gbd-results/",
+    "note": "Deaths from ALL sources of outdoor PM2.5 (fossil fuels, dust, wildfires, agriculture, etc.). Fossil fuel combustion accounts for ~1.3M of these (~33%, McDuffie et al. 2021). NOT combined with household air pollution deaths (~2.8M/yr, separate category).",
+    "definition_key": "deaths_ambient_pm25"
+  },
+  "deaths_household_air_m": {
+    "value": 2.76,
+    "unit": "million/yr",
+    "label": "Deaths from household air pollution (solid fuels)",
+    "year": 2023,
+    "previous_value": 2.9,
+    "pct_change": -4.8,
+    "trend": "\u2193 good",
+    "source": "IHME Global Burden of Disease 2023 (household solid fuels)",
+    "source_url": "https://vizhub.healthdata.org/gbd-results/",
+    "note": "Household air pollution from solid-fuel cooking. NOT directly addressed by electricity decarbonization. Requires clean cooking access programs (South Asia, Sub-Saharan Africa).",
+    "definition_key": "deaths_household_air"
+  },
+  "electricity_access_pct": {
+    "value": 91.6,
+    "unit": "%",
+    "label": "Population with electricity access",
+    "year": 2023,
+    "previous_value": 91.3,
+    "pct_change": 0.3,
+    "trend": "\u2192 stable",
+    "source": "World Bank WDI (EG.ELC.ACCS.ZS), population-weighted",
+    "note": "Population-weighted global average (standard World Bank / IEA methodology). Masks large regional disparities.",
+    "definition_key": "pct_electricity_access"
+  },
+  "clean_cooking_access_pct": {
+    "value": 74.5,
+    "unit": "%",
+    "label": "Population with clean cooking fuel access",
+    "year": 2023,
+    "previous_value": 73.4,
+    "pct_change": 1.5,
+    "trend": "\u2191 good",
+    "source": "World Bank WDI (EG.CFT.ACCS.ZS), population-weighted",
+    "note": "Population-weighted global average (WHO / World Bank methodology). Closely linked to household air pollution mortality.",
+    "definition_key": "pct_clean_cooking"
+  },
+  "current_policies_warming_c": {
+    "value": 3.1,
+    "unit": "\u00b0C",
+    "label": "Projected warming under current policies",
+    "year": 2024,
+    "previous_value": 3.2,
+    "pct_change": -3.1,
+    "source": "UNEP Emissions Gap Report 2024",
+    "note": "3.1\u00b0C = warming if all current policies are fully implemented (UNEP 2024). If countries meet their unconditional NDC pledges: ~2.8\u00b0C. With conditional pledges: ~2.6\u00b0C. Click for historical temperature trend (HadCRUT5).",
+    "trend": "\u2193 good"
+  },
+  "renewable_share_total_energy_pct": {
+    "value": 13.0,
+    "unit": "%",
+    "label": "Renewable share of total energy",
+    "year": 2024,
+    "previous_value": 12.5,
+    "pct_change": 4.0,
+    "source": "OWID / IEA",
+    "note": "Share of renewables in total final energy consumption (not just electricity). Much lower than electricity share (~31%) because transport, heating, and industry still rely heavily on fossil fuels.",
+    "trend": "\u2191 good"
+  },
+
+  "subsidies_global_bn": {
+    "value": 600,
+    "unit": "$B/yr",
+    "label": "Global fossil fuel subsidies (explicit)",
+    "year": 2024,
+    "source": "IEA Fossil Fuel Subsidies Database",
+    "source_url": "https://www.iea.org/data-and-statistics/data-product/fossil-fuel-subsidies-database",
+    "note": "Explicit subsidies only (government price support). IMF estimates ~$7T/yr including implicit costs (unpriced pollution, climate damage).",
+    "trend": "\u2191 bad"
+  },
+  "subsidies_implicit_tn": {
+    "value": 7.0,
+    "unit": "$T/yr",
+    "label": "Total subsidies incl. implicit (IMF)",
+    "year": 2022,
+    "source": "IMF 2023",
+    "source_url": "https://www.imf.org/en/Topics/climate-change/energy-subsidies",
+    "note": "Includes explicit subsidies plus unpriced externalities (air pollution, climate damage, forgone consumption taxes).",
+    "trend": "\u2191 bad"
+  },
+  "subsidies_top_country": {
+    "value": "Russia",
+    "unit": "(IEA+OECD)",
+    "label": "Top subsidizer (consumer + production)",
+    "year": 2023,
+    "source": "IISD Fossil Fuel Subsidy Tracker (IEA + OECD data)",
+    "note": "IEA price-gap consumer subsidies. Rankings vary by methodology and year. For 2023 (IISD/IEA+OECD combined): Russia, Germany, Iran, China, Japan among top subsidizers. IMF broad definition (incl. unpriced externalities) ranks China #1 globally. US shows ~$0 under IEA price-gap but ~$18B under OECD production subsidy accounting.",
+    "trend": "\u2192"
+  },
+
+  "predictions_solar_ratio": {
+    "value": 10,
+    "unit": "\u00d7",
+    "label": "Solar: actual vs IEA 2006 forecast",
+    "year": 2023,
+    "source": "IEA WEO 2006 Reference Scenario vs IRENA actuals",
+    "note": "IEA WEO 2006 Reference Scenario projected ~142 GW solar by 2030. Actual 2023: 1,415 GW (~10\u00d7 more). Even later editions (WEO 2010: ~400 GW for 2030) underestimated by ~3.5\u00d7. Demonstrates systematic underestimation of solar adoption curves.",
+    "trend": "\u2191 good"
+  },
+  "predictions_wind_ratio": {
+    "value": 3,
+    "unit": "\u00d7",
+    "label": "Wind: actual vs IEA 2006 forecast",
+    "year": 2023,
+    "source": "IEA WEO 2006 vs IRENA actuals",
+    "note": "Wind forecasts were less dramatically wrong than solar, but still consistently underestimated by 2\u20133\u00d7.",
+    "trend": "\u2191 good"
+  },
+  "predictions_ccs_shortfall": {
+    "value": "0.07\u00d7",
+    "unit": "",
+    "label": "CCS: actual vs IEA WEO 2009 forecast for 2030",
+    "year": 2024,
+    "source": "Global CCS Institute 2024; IEA WEO 2009",
+    "note": "IEA WEO 2009 projected 700 MtCO\u2082/yr CCS by 2030. Actual 2024: ~55 MtCO\u2082/yr (0.08\u00d7 of forecast). CCS has consistently underperformed projections.",
+    "trend": "\u2193 bad"
+  },
+
+  "health_deaths_fossil_pm25": {
+    "value": "1.3\u20138.7M",
+    "unit": "/yr",
+    "label": "Deaths from fossil fuel PM2.5",
+    "year": 2021,
+    "source": "McDuffie 2021; Lelieveld 2023; Vohra 2021",
+    "source_url": "https://doi.org/10.1038/s41467-021-23853-y",
+    "note": "Range reflects methodology: ~1.3M (McDuffie, GBD sector attribution), ~5.1M (Lelieveld, atmospheric chemistry), ~8.7M (Vohra, updated CRFs). GBD total from ALL outdoor PM2.5 = ~4.9M. Click for GBD time series.",
+    "trend": "\u2191 bad"
+  },
+  "health_deaths_per_twh_coal": {
+    "value": 24.6,
+    "unit": "deaths/TWh",
+    "label": "Coal: deaths per TWh",
+    "year": 2021,
+    "source": "OWID (Markandya & Wilkinson 2007; Sovacool et al. 2016)",
+    "source_url": "https://ourworldindata.org/safest-sources-of-energy",
+    "note": "Lifecycle deaths per TWh from coal. ~1,000\u00d7 more than wind or solar. Includes mining, air pollution, accidents.",
+    "trend": "\u2192"
+  },
+  "health_heat_deaths": {
+    "value": 200000,
+    "unit": "deaths/yr",
+    "label": "Climate-attributable heat deaths",
+    "year": 2021,
+    "source": "Lancet Countdown 2025 + Vicedo-Cabrera 2021",
+    "source_url": "https://doi.org/10.1038/s41558-021-01058-x",
+    "note": "~37% of total heat-related deaths (~546K/yr, Lancet Countdown 2025) are attributable to anthropogenic climate change (Vicedo-Cabrera et al. 2021, Nature Climate Change). This yields ~200K/yr climate-attributable heat deaths. Separate from air pollution.",
+    "trend": "\u2191 bad"
+  },
+  "health_electricity_access": {
+    "value": 91.6,
+    "unit": "%",
+    "label": "Global electricity access",
+    "year": 2023,
+    "source": "World Bank WDI",
+    "note": "SDG7 universal target at risk.",
+    "trend": "\u2192 stable"
+  },
+
+  "health_disaster_deaths": {
+    "value": 75000,
+    "unit": "deaths/yr",
+    "label": "Weather/climate disaster deaths",
+    "year": 2024,
+    "source": "EM-DAT (CRED / UCLouvain)",
+    "source_url": "https://www.emdat.be/",
+    "note": "Deaths from floods, storms, droughts, extreme temperatures, wildfires (3-year avg ~75K/yr). Not all individually attributable to climate change, but climate change increases frequency and severity. Highly variable year-to-year.",
+    "trend": "\u2191 bad"
+  },
+  "health_cumulative_climate_deaths": {
+    "value": ">1.6M",
+    "unit": "/yr",
+    "label": "Total climate-attributable deaths",
+    "year": 2021,
+    "source": "McDuffie 2021 + Vicedo-Cabrera 2021 + EM-DAT",
+    "note": "Sum of fossil fuel PM2.5 (~1.4M, McDuffie 33% of GBD), climate-attributable heat (~200K, 37% of total heat deaths per Vicedo-Cabrera 2021), and weather/climate disaster deaths (~8K). Uses conservative estimates throughout. Higher PM2.5 methods (Lelieveld/Vohra) would yield 5\u20139M+ total.",
+    "trend": "\u2191 bad"
+  }
+}

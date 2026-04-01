@@ -1,0 +1,15 @@
+data/raw/*
+# Whitelist raw files needed at runtime
+!data/raw/hadcrut5_global_annual.csv
+!data/raw/noaa_co2_global_mean.csv
+!data/raw/owid_co2.csv
+__pycache__/
+*.pyc
+.env
+.DS_Store
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.claude/settings.local.json
+.claude/plans/
