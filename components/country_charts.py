@@ -720,7 +720,7 @@ def _hex_to_rgb_cc(hex_color: str) -> str:
     return f"{r},{g},{b}"
 
 
-def _safe_float(val) -> float | None:
+def _safe_float(val):
     """Return float or None for missing/NaN values."""
     if val is None:
         return None

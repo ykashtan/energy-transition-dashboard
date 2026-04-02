@@ -1328,3 +1328,267 @@ def health_heat_mortality_trend(lancet_df: pd.DataFrame) -> go.Figure:
         plot_bgcolor=PLOT_BG, font=CHART_FONT, hovermode="x unified",
     )
     return fig
+
+
+# ---------------------------------------------------------------------------
+# Electrification charts
+# ---------------------------------------------------------------------------
+
+# Colors for key regions in electrification charts
+_ELEC_REGION_COLORS = {
+    "World": "#212529",
+    "China": "#e63946",
+    "EU27": "#1d3557",
+    "USA": "#457b9d",
+    "Norway": "#2a9d8f",
+    "India": "#e9c46a",
+    "Germany": "#6c757d",
+    "France": "#264653",
+    "United Kingdom": "#f4a261",
+    "Japan": "#a8dadc",
+    "Korea": "#6d6875",
+    "Brazil": "#06d6a0",
+    "Thailand": "#118ab2",
+    "Indonesia": "#073b4c",
+    "Viet Nam": "#ef476f",
+}
+
+_ELEC_DASHED = {"India", "Japan", "Korea", "Brazil", "Thailand", "Indonesia", "Viet Nam"}
+
+
+def ev_adoption_scurves(share_df: pd.DataFrame,
+                        regions=None) -> go.Figure:
+    """EV sales share S-curves by region. Default shows top regions."""
+    fig = go.Figure()
+
+    if share_df.empty:
+        return _empty_chart("EV sales share data not available")
+
+    if regions is None:
+        regions = [
+            "Norway", "China", "EU27", "United Kingdom", "France",
+            "Germany", "World", "USA", "India", "Brazil",
+        ]
+
+    for region in regions:
+        rd = share_df[share_df["region"] == region].sort_values("year")
+        if rd.empty:
+            continue
+        color = _ELEC_REGION_COLORS.get(region, "#adb5bd")
+        dash_style = "dash" if region in _ELEC_DASHED else "solid"
+        width = 3 if region == "World" else 2
+        fig.add_trace(go.Scatter(
+            x=rd["year"], y=rd["ev_share_pct"],
+            mode="lines+markers", name=region,
+            line=dict(color=color, width=width, dash=dash_style),
+            marker=dict(size=3 if region != "World" else 5),
+            hovertemplate=f"<b>{region}</b> %{{x}}: %{{y:.1f}}%<extra></extra>",
+        ))
+
+    # 5% and 10% tipping point reference lines
+    fig.add_hline(y=5, line_dash="dot", line_color="#adb5bd", line_width=1,
+                  annotation_text="5% tipping point", annotation_position="top left",
+                  annotation_font=dict(size=9, color="#6c757d"))
+    fig.add_hline(y=10, line_dash="dot", line_color="#adb5bd", line_width=1,
+                  annotation_text="10%", annotation_position="top left",
+                  annotation_font=dict(size=9, color="#6c757d"))
+
+    fig.update_layout(
+        title=dict(
+            text="EV Share of New Car Sales by Region (S-curve adoption)",
+            font=dict(size=13, family="Inter, Helvetica Neue, Arial, sans-serif"),
+        ),
+        yaxis=dict(title="% of new car sales", gridcolor=GRID_COLOR, rangemode="tozero"),
+        xaxis=dict(title="", gridcolor=GRID_COLOR, tickformat="d"),
+        height=420, margin=CHART_MARGIN, paper_bgcolor=PAPER_BG,
+        plot_bgcolor=PLOT_BG, font=CHART_FONT, hovermode="x unified",
+        legend=dict(font=dict(size=10)),
+    )
+    return fig
+
+
+def ev_sales_by_mode(sales_df: pd.DataFrame) -> go.Figure:
+    """Global EV sales by vehicle mode (Cars, Trucks, Buses, Vans) — stacked area."""
+    fig = go.Figure()
+
+    if sales_df.empty:
+        return _empty_chart("EV sales data not available")
+
+    world = sales_df[sales_df["region"] == "World"].copy()
+    if world.empty:
+        return _empty_chart("Global EV sales data not available")
+
+    mode_colors = {
+        "Cars": "#2e7d32",
+        "Trucks": "#1565c0",
+        "Buses": "#ff9800",
+        "Vans": "#9c27b0",
+    }
+
+    for mode in ["Cars", "Trucks", "Buses", "Vans"]:
+        md = world[world["mode"] == mode].sort_values("year")
+        if md.empty:
+            continue
+        fig.add_trace(go.Scatter(
+            x=md["year"], y=md["ev_sales"] / 1e6,
+            mode="lines", name=mode, stackgroup="one",
+            line=dict(color=mode_colors.get(mode, "#adb5bd"), width=0.5),
+            hovertemplate=f"<b>{mode}</b> %{{x}}: %{{y:.2f}}M<extra></extra>",
+        ))
+
+    fig.update_layout(
+        title=dict(
+            text="Global EV Sales by Vehicle Type (millions/yr)",
+            font=dict(size=13, family="Inter, Helvetica Neue, Arial, sans-serif"),
+        ),
+        yaxis=dict(title="Million vehicles/yr", gridcolor=GRID_COLOR, rangemode="tozero"),
+        xaxis=dict(title="", gridcolor=GRID_COLOR, tickformat="d"),
+        height=420, margin=CHART_MARGIN, paper_bgcolor=PAPER_BG,
+        plot_bgcolor=PLOT_BG, font=CHART_FONT, hovermode="x unified",
+    )
+    return fig
+
+
+def ev_stock_growth(stock_df: pd.DataFrame) -> go.Figure:
+    """Global EV stock growth chart (millions)."""
+    fig = go.Figure()
+
+    if stock_df.empty:
+        return _empty_chart("EV stock data not available")
+
+    world = stock_df[stock_df["region"] == "World"].sort_values("year")
+    if world.empty:
+        return _empty_chart("Global EV stock data not available")
+
+    fig.add_trace(go.Bar(
+        x=world["year"], y=world["ev_stock"] / 1e6,
+        marker_color="#2e7d32", name="Global EV fleet",
+        hovertemplate="<b>%{x}</b>: %{y:.1f}M EVs<extra></extra>",
+    ))
+
+    fig.update_layout(
+        title=dict(
+            text="Global Electric Car Fleet (millions)",
+            font=dict(size=13, family="Inter, Helvetica Neue, Arial, sans-serif"),
+        ),
+        yaxis=dict(title="Million EVs on road", gridcolor=GRID_COLOR, rangemode="tozero"),
+        xaxis=dict(title="", gridcolor=GRID_COLOR, tickformat="d"),
+        height=420, margin=CHART_MARGIN, paper_bgcolor=PAPER_BG,
+        plot_bgcolor=PLOT_BG, font=CHART_FONT, hovermode="x unified",
+        bargap=0.15,
+    )
+    return fig
+
+
+def electrification_sector_overview() -> go.Figure:
+    """Sector comparison showing electrification progress across sectors.
+
+    Uses hardcoded milestone data for sectors without time-series data.
+    This is a progress/status chart, not a time series.
+    """
+    fig = go.Figure()
+
+    # Sector data: name, electrification metric, value, color, status
+    sectors = [
+        ("Passenger cars", "EV share of new sales", 22.0, "#2e7d32", "Past tipping point"),
+        ("Trucks", "EV share of new sales", 2.0, "#1565c0", "Early adoption"),
+        ("Buses", "EV share of new sales", 5.0, "#ff9800", "At tipping point"),
+        ("Heat pumps (US)", "HP outsold gas furnaces", 100, "#9c27b0", "HP > gas furnaces (2024)"),
+        ("Steel (EAF)", "EAF share of production", 29, "#795548", "Growing steadily"),
+        ("Aviation (SAF)", "SAF share of jet fuel", 0.3, "#e63946", "Pre-tipping (<1%)"),
+        ("Shipping (alt-fuel)", "Alt-fuel share of orders", 30, "#0077b6", "LNG-dominated"),
+    ]
+
+    names = [s[0] for s in sectors]
+    values = [s[2] for s in sectors]
+    colors = [s[3] for s in sectors]
+    metrics = [s[1] for s in sectors]
+    statuses = [s[4] for s in sectors]
+
+    fig.add_trace(go.Bar(
+        y=names, x=values, orientation="h",
+        marker_color=colors,
+        text=[f"{v:.0f}% — {st}" if v < 100 else st for v, st in zip(values, statuses)],
+        textposition="auto",
+        hovertemplate=[
+            f"<b>{n}</b><br>{m}: {v:.1f}%<br>Status: {s}<extra></extra>"
+            for n, m, v, s in zip(names, metrics, values, statuses)
+        ],
+    ))
+
+    # 5% tipping point line
+    fig.add_vline(x=5, line_dash="dot", line_color="#e63946", line_width=1,
+                  annotation_text="5% tipping point", annotation_position="top",
+                  annotation_font=dict(size=9, color="#e63946"))
+
+    fig.update_layout(
+        title=dict(
+            text="Electrification Progress Across Sectors (latest available data)",
+            font=dict(size=13, family="Inter, Helvetica Neue, Arial, sans-serif"),
+        ),
+        xaxis=dict(title="% electrified / alt-fuel share", gridcolor=GRID_COLOR,
+                   range=[0, 105]),
+        yaxis=dict(gridcolor=GRID_COLOR, autorange="reversed"),
+        height=380, margin=dict(l=140, r=24, t=54, b=50), paper_bgcolor=PAPER_BG,
+        plot_bgcolor=PLOT_BG, font=CHART_FONT, hovermode="closest",
+    )
+
+    # Source annotation
+    fig.add_annotation(
+        xref="paper", yref="paper", x=1.0, y=-0.15,
+        text=(
+            "Sources: IEA GEVO 2025 (EVs, trucks, buses); AHRI 2024 (heat pumps); "
+            "World Steel Assn (EAF); IATA (SAF); Lloyd's Register (shipping)"
+        ),
+        showarrow=False, font=dict(size=8, color="#6c757d"), align="right",
+    )
+    return fig
+
+
+def electrification_milestones() -> go.Figure:
+    """Timeline of key electrification milestones for harder-to-electrify sectors."""
+    fig = go.Figure()
+
+    milestones = [
+        (2013, "Norway crosses 5% EV share", "EVs", "#2a9d8f"),
+        (2019, "China crosses 5% EV share", "EVs", "#e63946"),
+        (2020, "Pipistrel Velis Electro: first certified electric aircraft", "Aviation", "#6c757d"),
+        (2020, "EU crosses 5% EV share", "EVs", "#1d3557"),
+        (2021, "Global EV share crosses 5%", "EVs", "#212529"),
+        (2022, "US heat pumps outsell gas furnaces for first time", "Heating", "#9c27b0"),
+        (2022, "Global EV share crosses 10%", "EVs", "#212529"),
+        (2023, "SAF production 0.5 Mt — doubling begins", "Aviation", "#e63946"),
+        (2024, "SAF production hits 1 Mt (0.3% of jet fuel)", "Aviation", "#e63946"),
+        (2024, "Global EV share reaches 22%", "EVs", "#2e7d32"),
+        (2024, "93% of new steel capacity announced is EAF", "Industry", "#795548"),
+        (2024, "Electric truck sales reach ~93K globally", "Trucks", "#1565c0"),
+        (2025, "EU ReFuelEU Aviation: 2% SAF mandate begins", "Aviation", "#e63946"),
+        (2025, "First CCS cement plant operational (Brevik, Norway)", "Industry", "#795548"),
+    ]
+
+    for i, (year, text, sector, color) in enumerate(milestones):
+        fig.add_trace(go.Scatter(
+            x=[year], y=[i],
+            mode="markers+text",
+            marker=dict(size=12, color=color, symbol="diamond"),
+            text=[f"  {text}"],
+            textposition="middle right",
+            textfont=dict(size=10),
+            name=sector,
+            showlegend=False,
+            hovertemplate=f"<b>{year}</b>: {text}<br>Sector: {sector}<extra></extra>",
+        ))
+
+    fig.update_layout(
+        title=dict(
+            text="Electrification Milestones Across Sectors",
+            font=dict(size=13, family="Inter, Helvetica Neue, Arial, sans-serif"),
+        ),
+        xaxis=dict(title="", gridcolor=GRID_COLOR, tickformat="d",
+                   range=[2012, 2027]),
+        yaxis=dict(visible=False),
+        height=480, margin=dict(l=24, r=280, t=54, b=50),
+        paper_bgcolor=PAPER_BG, plot_bgcolor=PLOT_BG, font=CHART_FONT,
+        hovermode="closest",
+    )
+    return fig

@@ -31,6 +31,8 @@ from utils.data_loader import (
     get_imf_subsidies,
     get_heat_deaths_reference, get_lancet_heat_mortality,
     get_climate_disasters,
+    get_ev_sales_share, get_ev_sales, get_ev_stock,
+    get_electrification_kpis,
 )
 from components.kpi_card import make_hero_stats_row, make_thematic_stats_row, HERO_KEYS
 from components.context_charts import (
@@ -39,6 +41,8 @@ from components.context_charts import (
     subsidies_top_countries, subsidies_time_series,
     health_global_mortality_trend, health_deaths_per_twh_bars,
     health_heat_mortality_trend,
+    ev_adoption_scurves, ev_sales_by_mode, ev_stock_growth,
+    electrification_sector_overview, electrification_milestones,
 )
 from components.predictions_charts import predictions_preview, fan_chart
 
@@ -46,7 +50,21 @@ dash.register_page(__name__, path="/", title="Energy Transition Dashboard")
 
 
 # ---------------------------------------------------------------------------
-# Figure builders — called once per page load; data is pre-loaded in memory
+# Figure cache — figures are expensive to build; cache them at module level.
+# Data is pre-loaded and never changes, so figures only need building once.
+# ---------------------------------------------------------------------------
+_FIGURE_CACHE: dict = {}
+
+
+def _cached_fig(key: str, builder):
+    """Return a cached figure, building it on first call only."""
+    if key not in _FIGURE_CACHE:
+        _FIGURE_CACHE[key] = builder()
+    return _FIGURE_CACHE[key]
+
+
+# ---------------------------------------------------------------------------
+# Figure builders — built once and cached for all subsequent requests
 # ---------------------------------------------------------------------------
 
 def _build_emissions_pathways_fig():
@@ -411,7 +429,7 @@ def _build_hero_modals() -> list:
             dbc.ModalBody([
                 dcc.Graph(
                     id=f"hero-modal-chart-{key}",
-                    figure=_build_hero_trendline(key),
+                    figure=_cached_fig(f"hero_{key}", lambda k=key: _build_hero_trendline(k)),
                     config={"responsive": True, "displayModeBar": True, "displaylogo": False},
                 ),
                 html.P(note, className="small text-muted mt-2") if note else None,
@@ -454,6 +472,26 @@ def _build_health_heat_fig():
 
 def _build_predictions_fan_fig(tech="solar"):
     return _safe_fig(lambda: fan_chart(get_predictions(), tech))
+
+
+def _build_ev_scurves_fig():
+    return _safe_fig(lambda: ev_adoption_scurves(get_ev_sales_share()), height=420)
+
+
+def _build_ev_sales_by_mode_fig():
+    return _safe_fig(lambda: ev_sales_by_mode(get_ev_sales()), height=420)
+
+
+def _build_ev_stock_fig():
+    return _safe_fig(lambda: ev_stock_growth(get_ev_stock()), height=420)
+
+
+def _build_sector_overview_fig():
+    return _safe_fig(lambda: electrification_sector_overview(), height=380)
+
+
+def _build_milestones_fig():
+    return _safe_fig(lambda: electrification_milestones(), height=480)
 
 
 def _fmt_kpi_value(kpis: dict, key: str, fallback: str) -> str:
@@ -761,6 +799,80 @@ def _build_investment_kpi_cards(inv_kpis: dict) -> dbc.Row:
     ], className="g-3")
 
 
+def _build_electrification_hero_cards() -> dbc.Row:
+    """Build clickable hero cards for the Electrification section."""
+    ekpis = get_electrification_kpis()
+    if not ekpis:
+        return dbc.Row(html.Small("Electrification data pending — run scripts/process_electrification.py",
+                                  className="text-muted"))
+
+    ev_global = ekpis.get("ev_share_global", {})
+    ev_stock = ekpis.get("ev_stock_global", {})
+    tipping = ekpis.get("n_regions_past_tipping", {})
+    truck = ekpis.get("truck_ev_sales_global", {})
+
+    def _elec_card(card_id, icon_cls, icon_color, label, value_str, value_color,
+                   subtitle, source_text):
+        card = dbc.Card(dbc.CardBody([
+            html.Div([
+                html.I(className=f"bi {icon_cls} me-1 {icon_color} small"),
+                html.Small(label, className="text-muted"),
+            ], className="d-flex align-items-center"),
+            html.Div(value_str, className=f"fs-3 fw-bold mt-1 {value_color}"),
+            html.Small(subtitle, className="text-muted"),
+            html.Div(
+                html.Small(source_text, style={"fontSize": "0.7rem"},
+                           className="text-muted"),
+                className="mt-1",
+            ),
+        ], className="py-2 px-3"), className="country-stat-card h-100",
+            style={"cursor": "pointer"})
+        return html.Div(card, id=card_id, n_clicks=0)
+
+    ev_share_val = f"{ev_global.get('value', '?')}%"
+    ev_share_yr = ev_global.get("year", "")
+    stock_val = f"{ev_stock.get('value', '?'):.0f}M" if ev_stock.get("value") else "?"
+    stock_yr = ev_stock.get("year", "")
+    tip_val = f"{tipping.get('value', '?')}/{tipping.get('total', '?')}"
+    truck_val = f"~{truck.get('value', 0):,}" if truck.get("value") else "?"
+    truck_yr = truck.get("year", "")
+
+    return dbc.Row([
+        dbc.Col(
+            _elec_card(
+                "elec-card-ev-share", "bi-ev-front-fill", "text-success",
+                "Global EV share of new car sales", ev_share_val, "text-success",
+                f"{ev_share_yr} — crossed 10% in 2022",
+                "IEA GEVO 2025",
+            ), xs=12, sm=6, md=3, className="mb-3",
+        ),
+        dbc.Col(
+            _elec_card(
+                "elec-card-ev-stock", "bi-battery-charging", "text-primary",
+                "Global EV fleet", stock_val, "text-primary",
+                f"{stock_yr} — up from 10M in 2020",
+                "IEA GEVO 2025",
+            ), xs=12, sm=6, md=3, className="mb-3",
+        ),
+        dbc.Col(
+            _elec_card(
+                "elec-card-tipping", "bi-graph-up-arrow", "text-warning",
+                "Key markets past 5% EV tipping point", tip_val, "text-warning",
+                "S-curve theory: rapid adoption follows 5%",
+                "IEA GEVO 2025",
+            ), xs=12, sm=6, md=3, className="mb-3",
+        ),
+        dbc.Col(
+            _elec_card(
+                "elec-card-trucks", "bi-truck", "text-info",
+                "Electric truck sales (global)", truck_val, "text-info",
+                f"{truck_yr} — ~80% YoY growth",
+                "IEA GEVO 2025",
+            ), xs=12, sm=6, md=3, className="mb-3",
+        ),
+    ], className="g-3")
+
+
 def layout(**kwargs):
     kpis = get_kpis()
     inv_kpis = _get_investment_kpis()
@@ -925,7 +1037,7 @@ def layout(**kwargs):
                     **{"aria-label": "Chart showing global CO₂ emissions compared to IPCC 1.5°C, 2°C, and 2.5°C pathway ranges"},
                     children=dcc.Graph(
                         id="emissions-section-figure",
-                        figure=_build_emissions_pathways_fig(),
+                        figure=_cached_fig("emissions", _build_emissions_pathways_fig),
                         config={"responsive": True, "displayModeBar": True,
                                 "modeBarButtonsToRemove": ["lasso2d", "select2d"],
                                 "displaylogo": False},
@@ -998,7 +1110,7 @@ def layout(**kwargs):
                     **{"aria-label": "Chart showing global renewable capacity vs IEA Net Zero milestones"},
                     children=dcc.Graph(
                         id="energy-section-figure",
-                        figure=_build_deployment_tracker_fig(),
+                        figure=_cached_fig("deployment", _build_deployment_tracker_fig),
                         config={"responsive": True, "displayModeBar": False},
                     ),
                 ),
@@ -1041,7 +1153,7 @@ def layout(**kwargs):
                     **{"aria-label": "Investment and subsidies chart"},
                     children=dcc.Graph(
                         id="investment-section-figure",
-                        figure=_build_investment_fig(),
+                        figure=_cached_fig("investment", _build_investment_fig),
                         config={"responsive": True, "displayModeBar": False},
                     ),
                 ),
@@ -1185,7 +1297,7 @@ def layout(**kwargs):
                     **{"aria-label": "Chart showing LCOE cost declines for solar, wind, and battery storage since 2010"},
                     children=dcc.Graph(
                         id="cost-revolution-figure",
-                        figure=_build_cost_revolution_fig(),
+                        figure=_cached_fig("cost", _build_cost_revolution_fig),
                         config={
                             "responsive": True,
                             "displayModeBar": True,
@@ -1251,7 +1363,7 @@ def layout(**kwargs):
                     **{"aria-label": "Predictions vs reality chart"},
                     children=dcc.Graph(
                         id="predictions-section-figure",
-                        figure=_build_predictions_fan_fig("solar"),
+                        figure=_cached_fig("predictions_solar", lambda: _build_predictions_fan_fig("solar")),
                         config={"responsive": True, "displayModeBar": True,
                                 "modeBarButtonsToRemove": ["lasso2d", "select2d"],
                                 "displaylogo": False},
@@ -1268,7 +1380,73 @@ def layout(**kwargs):
         ], fluid=False),
 
         # =====================================================================
-        # Section 9: Health
+        # Section 9: Electrification
+        # =====================================================================
+        dbc.Container([
+            html.Div(className="thematic-section", children=[
+                html.H2("Electrification", className="section-heading"),
+                html.P(
+                    "Tracking the electrification of transport, buildings, and industry "
+                    "— the demand-side revolution that determines how fast fossil fuels are displaced.",
+                    className="section-subheading",
+                ),
+                # Hero bar: key electrification metrics (clickable)
+                _build_electrification_hero_cards(),
+                # View toggle buttons
+                html.Div(
+                    className="d-flex gap-2 mt-2 mb-2",
+                    children=[
+                        dbc.Button(
+                            "EV S-curves", id="elec-btn-scurves", n_clicks=0,
+                            color="success", outline=True, size="sm",
+                        ),
+                        dbc.Button(
+                            "Sector overview", id="elec-btn-sectors", n_clicks=0,
+                            color="secondary", outline=True, size="sm",
+                        ),
+                        dbc.Button(
+                            "Milestones", id="elec-btn-milestones", n_clicks=0,
+                            color="dark", outline=True, size="sm",
+                        ),
+                    ],
+                ),
+                # Switchable chart area
+                html.Div(
+                    id="electrification-chart-container",
+                    className="context-chart-card mt-1",
+                    **{"aria-label": "Electrification progress chart"},
+                    children=dcc.Graph(
+                        id="electrification-section-figure",
+                        figure=_cached_fig("ev_scurves", _build_ev_scurves_fig),
+                        config={"responsive": True, "displayModeBar": True,
+                                "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                                "displaylogo": False},
+                    ),
+                ),
+                dbc.Alert([
+                    html.Strong("About S-curves: "),
+                    "Technology adoption typically follows an S-shaped curve. "
+                    "Research suggests that once EV sales share crosses ~5%, "
+                    "adoption accelerates rapidly. Norway (5% in 2013) reached 92% by 2024. "
+                    "The global average crossed 5% in 2021 and 10% in 2022, "
+                    "reaching 22% by 2024. ",
+                    html.Br(),
+                    html.Small([
+                        "Data: ",
+                        html.A(
+                            "IEA Global EV Outlook 2025",
+                            href="https://www.iea.org/reports/global-ev-outlook-2025",
+                            target="_blank", className="alert-link",
+                        ),
+                        " (CC BY 4.0). Sector overview uses data from IEA, AHRI, "
+                        "World Steel Association, IATA, and Lloyd's Register.",
+                    ], className="text-muted"),
+                ], color="secondary", className="small py-2 mt-2"),
+            ]),
+        ], fluid=False),
+
+        # =====================================================================
+        # Section 10: Health
         # =====================================================================
         dbc.Container([
             html.Div(className="thematic-section", children=[
@@ -1290,7 +1468,7 @@ def layout(**kwargs):
                     **{"aria-label": "Health impact chart"},
                     children=dcc.Graph(
                         id="health-section-figure",
-                        figure=_build_health_mortality_fig(),
+                        figure=_cached_fig("health", _build_health_mortality_fig),
                         config={"responsive": True, "displayModeBar": False},
                     ),
                 ),
@@ -1392,6 +1570,15 @@ PREDICTIONS_SECTION_KEYS = [
 HEALTH_SECTION_KEYS = [
     "health_deaths_fossil_pm25", "health_heat_deaths",
     "health_disaster_deaths", "health_cumulative_climate_deaths",
+]
+
+ELECTRIFICATION_CARD_IDS = [
+    "elec-card-ev-share", "elec-card-ev-stock",
+    "elec-card-tipping", "elec-card-trucks",
+]
+
+ELECTRIFICATION_BTN_IDS = [
+    "elec-btn-scurves", "elec-btn-sectors", "elec-btn-milestones",
 ]
 
 
@@ -1710,3 +1897,27 @@ def switch_health_chart(*args):
             pass
     # PM2.5, cumulative total, or default: show the full 4-line chart
     return _build_health_mortality_fig()
+
+
+def switch_electrification_chart(*args):
+    """Switch the Electrification section chart based on hero card or button click."""
+    triggered_id = str(ctx.triggered_id or "")
+
+    # Button toggles
+    if "elec-btn-sectors" in triggered_id:
+        return _build_sector_overview_fig()
+    elif "elec-btn-milestones" in triggered_id:
+        return _build_milestones_fig()
+    elif "elec-btn-scurves" in triggered_id:
+        return _build_ev_scurves_fig()
+
+    # Hero card clicks
+    if "elec-card-ev-share" in triggered_id or "elec-card-tipping" in triggered_id:
+        return _build_ev_scurves_fig()
+    elif "elec-card-ev-stock" in triggered_id:
+        return _build_ev_stock_fig()
+    elif "elec-card-trucks" in triggered_id:
+        return _build_ev_sales_by_mode_fig()
+
+    # Default: S-curves
+    return _build_ev_scurves_fig()

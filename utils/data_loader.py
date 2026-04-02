@@ -279,6 +279,33 @@ def get_latest_year_map(df: pd.DataFrame, col: str) -> pd.DataFrame:
 # Trigger loading at import time so first dashboard request is fast
 # ---------------------------------------------------------------------------
 
+def get_ev_sales_share() -> pd.DataFrame:
+    """Return EV sales share data (region x year, %)."""
+    return _load("ev_sales_share.parquet")
+
+
+def get_ev_sales() -> pd.DataFrame:
+    """Return EV sales data (region x mode x year, absolute)."""
+    return _load("ev_sales.parquet")
+
+
+def get_ev_stock() -> pd.DataFrame:
+    """Return EV stock data (region x year)."""
+    return _load("ev_stock.parquet")
+
+
+def get_electrification_kpis() -> dict:
+    """Return pre-computed electrification KPIs."""
+    if "electrification_kpis" not in _KPI_CACHE:
+        path = PROCESSED_DIR / "electrification_kpis.json"
+        if path.exists():
+            with open(path) as f:
+                _KPI_CACHE["electrification_kpis"] = json.load(f)
+        else:
+            _KPI_CACHE["electrification_kpis"] = {}
+    return _KPI_CACHE["electrification_kpis"]
+
+
 def preload_all():
     """Pre-load all available Parquet files into cache. Call at app startup."""
     files = [
@@ -289,8 +316,10 @@ def preload_all():
         "investment.parquet", "subsidies.parquet", "subsidy_indicators.parquet",
         "ccus_projects.parquet", "vulnerability.parquet", "climate_disasters.parquet",
         "imf_subsidies.parquet", "imf_health_reference.parquet",
+        "ev_sales_share.parquet", "ev_sales.parquet", "ev_stock.parquet",
     ]
     for f in files:
         _load(f)
     _load_kpis()
+    get_electrification_kpis()
     print("[data_loader] All available data files pre-loaded.")

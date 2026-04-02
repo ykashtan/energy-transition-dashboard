@@ -1,6 +1,7 @@
 """
 compute_kpis.py — Pre-computes all homepage KPI values and saves them to data/processed/kpis.json.
 
+
 The homepage NEVER queries Parquet files at request time — it reads kpis.json only.
 This keeps the homepage fast even on Render.com's free tier (no Parquet reads per request).
 
@@ -29,6 +30,7 @@ KPIs computed:
 import json
 import sys
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 import numpy as np
@@ -309,7 +311,7 @@ def compute_energy_kpis(energy_mix: pd.DataFrame, capacity: pd.DataFrame) -> dic
 
 def _population_weighted_mean(
     health: pd.DataFrame, col: str, year: int, population_df: pd.DataFrame
-) -> float | None:
+) -> Optional[float]:
     """
     Compute population-weighted mean of `col` for a given year.
 

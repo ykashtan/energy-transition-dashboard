@@ -51,6 +51,8 @@ server = app.server
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Home", href="/")),
+        dbc.NavItem(dbc.NavLink("Spotlights", href="/spotlight")),
+        dbc.NavItem(dbc.NavLink("Tipping Points", href="/tipping-points")),
         dbc.NavItem(dbc.NavLink("Methodology", href="/methodology")),
     ],
     brand="Energy Transition Dashboard",
@@ -242,10 +244,11 @@ from pages.home import (
     toggle_hero_modal,
     switch_emissions_chart, switch_energy_chart,
     switch_investment_chart, switch_predictions_chart,
-    switch_health_chart,
+    switch_health_chart, switch_electrification_chart,
     EMISSIONS_SECTION_KEYS, ENERGY_SECTION_KEYS,
     INVESTMENT_SECTION_KEYS, PREDICTIONS_SECTION_KEYS,
     HEALTH_SECTION_KEYS,
+    ELECTRIFICATION_CARD_IDS, ELECTRIFICATION_BTN_IDS,
 )
 from components.kpi_card import HERO_KEYS
 
@@ -308,6 +311,13 @@ app.callback(
     [dash.Input(f"section-card-health-{k}", "n_clicks") for k in HEALTH_SECTION_KEYS],
     prevent_initial_call=True,
 )(switch_health_chart)
+
+app.callback(
+    dash.Output("electrification-section-figure", "figure"),
+    [dash.Input(cid, "n_clicks") for cid in ELECTRIFICATION_CARD_IDS]
+    + [dash.Input(bid, "n_clicks") for bid in ELECTRIFICATION_BTN_IDS],
+    prevent_initial_call=True,
+)(switch_electrification_chart)
 
 
 # ---------------------------------------------------------------------------

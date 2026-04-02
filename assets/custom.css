@@ -250,16 +250,12 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Stat cards in country header row */
+/* Stat cards in country header row — static display, not interactive */
 .country-stat-card {
   border-radius: 10px;
   border: 1px solid #e9ecef;
   background: #ffffff;
-  transition: box-shadow 0.15s ease;
-}
-
-.country-stat-card:hover {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
+  cursor: default;
 }
 
 /* Tab inner content padding */
@@ -303,6 +299,30 @@ body {
     font-size: 0.8rem;
     padding: 0.4rem 0.7rem;
   }
+}
+
+/* =========================================================
+   Spotlight page — country cards
+   ========================================================= */
+
+.spotlight-card {
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.spotlight-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.spotlight-card .card-header {
+  border-radius: 12px 12px 0 0;
+  padding: 0.7rem 1rem;
+}
+
+.spotlight-card .card-body {
+  padding: 1rem;
 }
 
 /* =========================================================

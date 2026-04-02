@@ -1,0 +1,102 @@
+{
+  "ev_share_global": {
+    "value": 22.0,
+    "year": 2024,
+    "unit": "%",
+    "label": "Global EV share of new car sales",
+    "source": "IEA Global EV Outlook 2025"
+  },
+  "ev_share_china": {
+    "value": 48.0,
+    "year": 2024,
+    "unit": "%",
+    "label": "China EV share of new car sales",
+    "source": "IEA Global EV Outlook 2025"
+  },
+  "ev_stock_global": {
+    "value": 58.0,
+    "year": 2024,
+    "unit": "M",
+    "label": "Global EV fleet",
+    "source": "IEA Global EV Outlook 2025"
+  },
+  "tipping_points": {
+    "World": {
+      "crossed_5pct_year": 2021,
+      "crossed_10pct_year": 2022,
+      "latest_share": 22.0
+    },
+    "China": {
+      "crossed_5pct_year": 2019,
+      "crossed_10pct_year": 2021,
+      "latest_share": 48.0
+    },
+    "EU27": {
+      "crossed_5pct_year": 2020,
+      "crossed_10pct_year": 2020,
+      "latest_share": 21.0
+    },
+    "USA": {
+      "crossed_5pct_year": 2022,
+      "crossed_10pct_year": 2024,
+      "latest_share": 10.0
+    },
+    "Norway": {
+      "crossed_5pct_year": 2013,
+      "crossed_10pct_year": 2014,
+      "latest_share": 92.0
+    },
+    "Germany": {
+      "crossed_5pct_year": 2020,
+      "crossed_10pct_year": 2020,
+      "latest_share": 19.0
+    },
+    "France": {
+      "crossed_5pct_year": 2020,
+      "crossed_10pct_year": 2020,
+      "latest_share": 24.0
+    },
+    "United Kingdom": {
+      "crossed_5pct_year": 2020,
+      "crossed_10pct_year": 2020,
+      "latest_share": 28.0
+    },
+    "Korea": {
+      "crossed_5pct_year": 2021,
+      "crossed_10pct_year": null,
+      "latest_share": 9.2
+    },
+    "Brazil": {
+      "crossed_5pct_year": 2024,
+      "crossed_10pct_year": null,
+      "latest_share": 6.4
+    },
+    "Thailand": {
+      "crossed_5pct_year": 2023,
+      "crossed_10pct_year": 2023,
+      "latest_share": 13.0
+    },
+    "Indonesia": {
+      "crossed_5pct_year": 2024,
+      "crossed_10pct_year": null,
+      "latest_share": 7.3
+    },
+    "Viet Nam": {
+      "crossed_5pct_year": 2023,
+      "crossed_10pct_year": 2024,
+      "latest_share": 17.0
+    }
+  },
+  "n_regions_past_tipping": {
+    "value": 13,
+    "total": 15,
+    "label": "Key markets past 5% EV tipping point",
+    "source": "IEA Global EV Outlook 2025"
+  },
+  "truck_ev_sales_global": {
+    "value": 93022,
+    "year": 2024,
+    "label": "Global electric truck sales",
+    "source": "IEA Global EV Outlook 2025"
+  }
+}
