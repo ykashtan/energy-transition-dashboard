@@ -3,7 +3,7 @@ services:
     name: energy-transition-dashboard
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:server
+    startCommand: gunicorn app:server --timeout 120
     plan: free
     autoDeploy: true
     envVars:

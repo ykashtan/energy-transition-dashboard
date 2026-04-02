@@ -311,14 +311,17 @@ app.callback(
 
 
 # ---------------------------------------------------------------------------
+# Pre-load data at import time (works for both `python app.py` AND gunicorn)
+# ---------------------------------------------------------------------------
+preload_all()
+
+
+# ---------------------------------------------------------------------------
 # Startup
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     import os
-
-    # Pre-load all data at startup
-    preload_all()
 
     # Run the development server
     # debug=True enables hot reload and error messages
