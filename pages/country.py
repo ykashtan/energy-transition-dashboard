@@ -9,24 +9,19 @@ Structure:
   - Header: country name + continent
   - Key stats row (5 cards: population, GDP, total GHG, CO₂/capita, renewable share)
   - 2-3 sentence template-based summary of energy transition status
-  - Tabbed layout:
-      Tab 1: Emissions        — GHG time series, fossil CO₂
-      Tab 2: Energy Mix       — stacked area + current-year donut
-      Tab 3: Renewables       — renewable share + solar/wind generation trend
-      Tab 4: Methane & GHGs   — CH₄ and N₂O time series (total + per capita)
-      Tab 5: Costs & Finance  — carbon pricing + global LCOE context
-      Tab 6: Health & Air Quality — PM2.5, mortality, energy access, safety
-      Tab 7: Peer Comparison  — horizontal bars vs global/regional/top emitters
+  - Tabbed layout with LAZY loading:
+      Tab content is built on demand via a callback (not all at once).
+      Only the active tab's figures are built — speeds up initial load.
   - Invalid ISO3 → 404-style message
 
 Design principles:
-  - All figures pre-built in layout() — no per-tab callbacks needed.
+  - Lazy tab loading: only the selected tab's figures are built per request.
   - config={'responsive': True} on every dcc.Graph for correct mobile sizing.
-  - graceful handling of empty DataFrames throughout.
+  - Graceful handling of empty DataFrames throughout.
 """
 
 import dash
-from dash import html, dcc
+from dash import html, dcc, callback, Output, Input, no_update
 import dash_bootstrap_components as dbc
 import pandas as pd
 
@@ -113,6 +108,21 @@ _ISO3_TO_IEA_REGION["CHN"] = "China"
 
 
 # ---------------------------------------------------------------------------
+# Tab definitions — order and labels
+# ---------------------------------------------------------------------------
+
+_TAB_DEFS = [
+    ("tab-emissions",    "Emissions"),
+    ("tab-energy-mix",   "Electricity Mix"),
+    ("tab-renewables",   "Renewables"),
+    ("tab-final-energy", "Final Energy Mix"),
+    ("tab-methane",      "Methane & GHGs"),
+    ("tab-investment",   "Investment"),
+    ("tab-peers",        "Peer Comparison"),
+]
+
+
+# ---------------------------------------------------------------------------
 # Page layout (called by Dash for every /country/<iso3> request)
 # ---------------------------------------------------------------------------
 
@@ -120,7 +130,8 @@ def layout(iso3: str = "USA", **kwargs):
     """
     Render the country detail page.
     `iso3` is extracted from the URL path by Dash Pages.
-    All figures are built here so no server callbacks are needed for tab switching.
+    Only the header and tab skeleton are built here — tab content is loaded
+    lazily via callback when a tab is selected.
     """
     iso3 = iso3.upper()
 
@@ -134,7 +145,7 @@ def layout(iso3: str = "USA", **kwargs):
     country_name = str(country_row["country_name"])
     continent = str(country_row.get("continent", ""))
 
-    # Per-country time series
+    # Per-country time series (lightweight — just filtering cached DataFrames)
     emissions_df = get_country_emissions(iso3)
     mix_df = get_country_energy_mix(iso3)
 
@@ -142,183 +153,15 @@ def layout(iso3: str = "USA", **kwargs):
     stats = _get_latest_stats(emissions_df, mix_df)
     summary = _build_summary(country_name, stats)
 
-    # Per-country health data
-    health_df = get_country_health(iso3)
-
-    # Per-country subsidy data
-    all_subsidies = get_subsidies()
-    country_subs = all_subsidies[all_subsidies["iso3"] == iso3] if not all_subsidies.empty else pd.DataFrame()
-    sub_indicators = get_subsidy_indicators()
-    country_indicators = sub_indicators[sub_indicators["iso3"] == iso3] if not sub_indicators.empty else pd.DataFrame()
-
-    # Regional investment data
-    iea_region = _ISO3_TO_IEA_REGION.get(iso3, "")
-    investment_df = get_investment()
-
-    # Build all figures upfront
-    em_fig = emissions_time_series_with_scenarios(
-        emissions_df, country_name, get_scenarios()
-    )
-    mix_area_fig = energy_mix_stacked_area(mix_df, country_name)
-    mix_donut_fig = energy_mix_donut(mix_df, country_name)
-    renewables_fig = renewables_trend_chart(mix_df, country_name)
-    final_energy_fig = final_energy_shares_chart(mix_df, country_name)
-    methane_fig = methane_trend_chart(emissions_df, country_name)
-    methane_pc_fig = methane_per_capita_chart(emissions_df, country_name)
-    peer_fig = peer_comparison_bars(
-        iso3, country_name, continent,
-        get_emissions(), get_energy_mix(), meta_df,
-    )
-    cost_fig  = _build_country_cost_fig()
-    carbon_px = _get_country_carbon_price(iso3)
-
-    # Investment & subsidy figures
-    subsidy_fig = country_subsidies_chart(country_subs, country_name)
-    region_inv_fig = regional_investment_chart(investment_df, iea_region) if iea_region else placeholder_figure("No regional investment data")
-
-    # Health tab figures
-    health_mortality_fig   = health_mortality_chart(health_df, country_name)
-    health_access_fig      = health_access_chart(health_df, country_name)
-    health_pm25_fig        = health_pm25_trend(health_df, country_name)
-    health_dptwh_fig       = deaths_per_twh_comparison(health_df, country_name, mix_df)
-    heatwave_fig           = heatwave_days_chart(health_df, country_name)
-
-    # =================================================================
-    # Build tabs conditionally — hide tabs with no data
-    # =================================================================
-    tabs = []
-
-    def _fig_has_data(fig):
-        """Return True if figure has real trace data (not just annotations)."""
-        return bool(fig.data)
-
-    if _fig_has_data(em_fig):
-        tabs.append(dbc.Tab(label="Emissions", tab_id="tab-emissions", children=html.Div([
-            dcc.Graph(figure=em_fig, config=_GRAPH_CONFIG),
-            dbc.Alert([
-                html.Strong("What's shown: "),
-                "Total GHG (CO₂, CH₄, N₂O, F-gases) expressed as CO₂e using AR6 "
-                "GWP100 values (EDGAR). Fossil CO₂ shows combustion emissions only "
-                "(Our World in Data / GCB). Sector-level breakdown coming in a future update.",
-            ], color="light", className="small py-2 mt-3 border"),
-        ], className="tab-content-inner")))
-
-    if _fig_has_data(mix_area_fig):
-        tabs.append(dbc.Tab(label="Electricity Mix", tab_id="tab-energy-mix", children=html.Div([
-            dbc.Row([
-                dbc.Col([dcc.Graph(figure=mix_area_fig, config=_GRAPH_CONFIG)], xs=12, lg=8),
-                dbc.Col([dcc.Graph(figure=mix_donut_fig, config=_GRAPH_CONFIG)], xs=12, lg=4),
-            ]),
-            dbc.Alert([
-                html.Strong("Note on renewable share: "),
-                "The percentage shown here is renewables as a share of ",
-                html.Em("electricity generation"),
-                " (~30% globally). Renewables' share of all final energy "
-                "consumption is ~13% — because electricity is only part of total "
-                "energy use. Source: Our World in Data (Ember + BP Statistical Review).",
-            ], color="light", className="small py-2 mt-3 border"),
-        ], className="tab-content-inner")))
-
-    if _fig_has_data(renewables_fig):
-        tabs.append(dbc.Tab(label="Renewables", tab_id="tab-renewables", children=html.Div([
-            dcc.Graph(figure=renewables_fig, config=_GRAPH_CONFIG),
-            dbc.Alert([
-                html.Strong("Renewable share (left axis): "),
-                "Share of total electricity generation from renewables (%). ",
-                html.Strong("Solar and wind (right axis): "),
-                "Actual generation in TWh/yr. Installed capacity data (GW by "
-                "technology) will be added when IRENA IRENASTAT integration is complete.",
-            ], color="light", className="small py-2 mt-3 border"),
-        ], className="tab-content-inner")))
-
-    if _fig_has_data(final_energy_fig):
-        tabs.append(dbc.Tab(label="Final Energy Mix", tab_id="tab-final-energy", children=html.Div([
-            dcc.Graph(figure=final_energy_fig, config=_GRAPH_CONFIG),
-            dbc.Alert([
-                html.Strong("Final energy vs electricity: "),
-                "This chart shows renewables as a share of ",
-                html.Em("total final energy consumption"),
-                " (~13% globally) — which includes transport, industrial heat, "
-                "and buildings. This is much lower than the ~30% renewable share "
-                "of electricity alone, because electricity is only ~20% of total "
-                "final energy use. Source: Our World in Data.",
-            ], color="light", className="small py-2 mt-3 border"),
-        ], className="tab-content-inner")))
-
-    if _fig_has_data(methane_fig) or _fig_has_data(methane_pc_fig):
-        _mc = []
-        if _fig_has_data(methane_fig):
-            _mc.append(dcc.Graph(figure=methane_fig, config=_GRAPH_CONFIG))
-        if _fig_has_data(methane_pc_fig):
-            _mc.append(dcc.Graph(figure=methane_pc_fig, config=_GRAPH_CONFIG, className="mt-3"))
-        _mc.append(dbc.Alert([
-            html.Strong("Why methane matters: "),
-            "CH₄ has a GWP-20 of ~80 — roughly 80× more potent than CO₂ over 20 years. "
-            "It has a short atmospheric lifetime (~12 yr), so cutting methane delivers "
-            "faster climate benefits than any other GHG reduction. N₂O (GWP-100: 273) "
-            "primarily comes from agriculture and industrial processes. Values shown use "
-            "GWP-100 weighting (AR6). Source: ",
-            html.A("Our World in Data", href="https://github.com/owid/co2-data",
-                   target="_blank", className="alert-link"),
-            " (compiled from EDGAR v8.0, PRIMAP-hist, CAIT/WRI). See the ",
-            html.A("global Methane & GHGs page", href="/methane"),
-            " for top emitters and sources breakdown.",
-        ], color="light", className="small py-2 mt-3 border"))
-        tabs.append(dbc.Tab(label="Methane & GHGs", tab_id="tab-methane",
-                            children=html.Div(_mc, className="tab-content-inner")))
-
-    if iea_region or not country_subs.empty:
-        _ic = []
-        if iea_region:
-            _ic.extend([
-                html.H6(f"Energy Investment: {iea_region}", className="fw-bold mb-1"),
-                dcc.Graph(figure=region_inv_fig, config=_GRAPH_CONFIG),
-            ])
-        if not country_subs.empty:
-            _ic.extend([
-                html.H6(f"{country_name}: Fossil Fuel Subsidies", className="fw-bold mt-4 mb-1"),
-                dcc.Graph(figure=subsidy_fig, config=_GRAPH_CONFIG),
-                *_build_subsidy_indicators_card(country_indicators, country_name),
-            ])
-        else:
-            _ic.append(html.Div([
-                html.H6("Fossil Fuel Subsidies", className="fw-bold mt-4 mb-1"),
-                html.P(f"No fossil fuel subsidy data available for {country_name} "
-                       "in the IEA database. This typically means subsidies are minimal "
-                       "or the country is not covered.", className="text-muted small"),
-            ]))
-        _ic.append(dbc.Alert([
-            html.Strong("Sources: "),
-            "Investment: ",
-            html.A("IEA World Energy Investment 2025",
-                   href="https://www.iea.org/reports/world-energy-investment-2025",
-                   target="_blank", className="alert-link"),
-            " (regional data, 2024 real USD). Subsidies: ",
-            html.A("IEA Fossil Fuel Subsidies Database",
-                   href="https://www.iea.org/data-and-statistics/data-product/fossil-fuel-subsidies-database",
-                   target="_blank", className="alert-link"),
-            " (explicit subsidies only, 2024 real USD).",
-        ], color="light", className="small py-2 mt-3 border"))
-        tabs.append(dbc.Tab(label="Investment", tab_id="tab-investment",
-                            children=html.Div(_ic, className="tab-content-inner")))
-
-    # Costs and Health tabs removed — these are global metrics shown on the
-    # main page only. Country pages focus on emissions, energy mix, and peers.
-
-    if _fig_has_data(peer_fig):
-        tabs.append(dbc.Tab(label="Peer Comparison", tab_id="tab-peers", children=html.Div([
-            dcc.Graph(figure=peer_fig, config=_GRAPH_CONFIG),
-            dbc.Alert([
-                html.Strong("Comparison group: "),
-                f"Global average, {continent} regional average, and the top 5 "
-                "global emitters by total GHG. Latest available year per country. "
-                "The selected country's bar is highlighted.",
-            ], color="light", className="small py-2 mt-3 border"),
-        ], className="tab-content-inner")))
-
-    active_tab = tabs[0].tab_id if tabs else "tab-emissions"
+    # Build tab list (all tabs shown; content loaded lazily)
+    tabs = [
+        dbc.Tab(label=label, tab_id=tab_id)
+        for tab_id, label in _TAB_DEFS
+    ]
 
     return html.Div([
+        # Store the ISO3 so the callback can access it
+        dcc.Store(id="country-iso3-store", data=iso3),
 
         # =================================================================
         # Back button + header
@@ -352,17 +195,232 @@ def layout(iso3: str = "USA", **kwargs):
         ], fluid=False),
 
         # =================================================================
-        # Tabbed layout (conditionally built above)
+        # Tabbed layout — content loaded lazily via callback
         # =================================================================
         dbc.Container([
             dbc.Tabs(
-                active_tab=active_tab,
+                id="country-tabs",
+                active_tab="tab-emissions",
                 className="country-tabs mt-3",
                 children=tabs,
+            ),
+            # Tab content rendered here by the callback
+            dcc.Loading(
+                html.Div(id="country-tab-content", className="pb-4"),
+                type="default",
+                color="#2c3e50",
             ),
         ], fluid=False, className="pb-5"),
 
     ])  # end main Div
+
+
+# ---------------------------------------------------------------------------
+# Lazy tab callback — builds only the selected tab's content
+# ---------------------------------------------------------------------------
+
+def build_tab_content(active_tab: str, iso3: str):
+    """Build and return the content for the selected tab. Called by app.callback."""
+    if not active_tab or not iso3:
+        return no_update
+
+    iso3 = iso3.upper()
+    if not is_valid_iso3(iso3):
+        return html.P("Invalid country.", className="text-muted mt-3")
+
+    meta_df = get_country_meta()
+    country_row = meta_df[meta_df["iso3"] == iso3].iloc[0]
+    country_name = str(country_row["country_name"])
+    continent = str(country_row.get("continent", ""))
+
+    if active_tab == "tab-emissions":
+        return _build_emissions_tab(iso3, country_name)
+    elif active_tab == "tab-energy-mix":
+        return _build_energy_mix_tab(iso3, country_name)
+    elif active_tab == "tab-renewables":
+        return _build_renewables_tab(iso3, country_name)
+    elif active_tab == "tab-final-energy":
+        return _build_final_energy_tab(iso3, country_name)
+    elif active_tab == "tab-methane":
+        return _build_methane_tab(iso3, country_name)
+    elif active_tab == "tab-investment":
+        return _build_investment_tab(iso3, country_name)
+    elif active_tab == "tab-peers":
+        return _build_peers_tab(iso3, country_name, continent)
+    else:
+        return html.P("Select a tab.", className="text-muted mt-3")
+
+
+# ---------------------------------------------------------------------------
+# Tab content builders — each builds only 1-3 figures
+# ---------------------------------------------------------------------------
+
+def _build_emissions_tab(iso3, country_name):
+    emissions_df = get_country_emissions(iso3)
+    fig = emissions_time_series_with_scenarios(emissions_df, country_name, get_scenarios())
+    if not fig.data:
+        return html.P(f"No emissions data available for {country_name}.", className="text-muted mt-3")
+    return html.Div([
+        dcc.Graph(figure=fig, config=_GRAPH_CONFIG),
+        dbc.Alert([
+            html.Strong("What's shown: "),
+            "Total GHG (CO₂, CH₄, N₂O, F-gases) expressed as CO₂e using AR6 "
+            "GWP100 values (EDGAR). Fossil CO₂ shows combustion emissions only "
+            "(Our World in Data / GCB). Sector-level breakdown coming in a future update.",
+        ], color="light", className="small py-2 mt-3 border"),
+    ], className="tab-content-inner mt-3")
+
+
+def _build_energy_mix_tab(iso3, country_name):
+    mix_df = get_country_energy_mix(iso3)
+    area_fig = energy_mix_stacked_area(mix_df, country_name)
+    donut_fig = energy_mix_donut(mix_df, country_name)
+    if not area_fig.data:
+        return html.P(f"No energy mix data available for {country_name}.", className="text-muted mt-3")
+    return html.Div([
+        dbc.Row([
+            dbc.Col([dcc.Graph(figure=area_fig, config=_GRAPH_CONFIG)], xs=12, lg=8),
+            dbc.Col([dcc.Graph(figure=donut_fig, config=_GRAPH_CONFIG)], xs=12, lg=4),
+        ]),
+        dbc.Alert([
+            html.Strong("Note on renewable share: "),
+            "The percentage shown here is renewables as a share of ",
+            html.Em("electricity generation"),
+            " (~30% globally). Renewables' share of all final energy "
+            "consumption is ~13% — because electricity is only part of total "
+            "energy use. Source: Our World in Data (Ember + BP Statistical Review).",
+        ], color="light", className="small py-2 mt-3 border"),
+    ], className="tab-content-inner mt-3")
+
+
+def _build_renewables_tab(iso3, country_name):
+    mix_df = get_country_energy_mix(iso3)
+    fig = renewables_trend_chart(mix_df, country_name)
+    if not fig.data:
+        return html.P(f"No renewables data available for {country_name}.", className="text-muted mt-3")
+    return html.Div([
+        dcc.Graph(figure=fig, config=_GRAPH_CONFIG),
+        dbc.Alert([
+            html.Strong("Renewable share (left axis): "),
+            "Share of total electricity generation from renewables (%). ",
+            html.Strong("Solar and wind (right axis): "),
+            "Actual generation in TWh/yr. Installed capacity data (GW by "
+            "technology) will be added when IRENA IRENASTAT integration is complete.",
+        ], color="light", className="small py-2 mt-3 border"),
+    ], className="tab-content-inner mt-3")
+
+
+def _build_final_energy_tab(iso3, country_name):
+    mix_df = get_country_energy_mix(iso3)
+    fig = final_energy_shares_chart(mix_df, country_name)
+    if not fig.data:
+        return html.P(f"No final energy data available for {country_name}.", className="text-muted mt-3")
+    return html.Div([
+        dcc.Graph(figure=fig, config=_GRAPH_CONFIG),
+        dbc.Alert([
+            html.Strong("Final energy vs electricity: "),
+            "This chart shows renewables as a share of ",
+            html.Em("total final energy consumption"),
+            " (~13% globally) — which includes transport, industrial heat, "
+            "and buildings. This is much lower than the ~30% renewable share "
+            "of electricity alone, because electricity is only ~20% of total "
+            "final energy use. Source: Our World in Data.",
+        ], color="light", className="small py-2 mt-3 border"),
+    ], className="tab-content-inner mt-3")
+
+
+def _build_methane_tab(iso3, country_name):
+    emissions_df = get_country_emissions(iso3)
+    methane_fig = methane_trend_chart(emissions_df, country_name)
+    methane_pc_fig = methane_per_capita_chart(emissions_df, country_name)
+    children = []
+    if methane_fig.data:
+        children.append(dcc.Graph(figure=methane_fig, config=_GRAPH_CONFIG))
+    if methane_pc_fig.data:
+        children.append(dcc.Graph(figure=methane_pc_fig, config=_GRAPH_CONFIG, className="mt-3"))
+    if not children:
+        return html.P(f"No methane/GHG data available for {country_name}.", className="text-muted mt-3")
+    children.append(dbc.Alert([
+        html.Strong("Why methane matters: "),
+        "CH₄ has a GWP-20 of ~80 — roughly 80× more potent than CO₂ over 20 years. "
+        "It has a short atmospheric lifetime (~12 yr), so cutting methane delivers "
+        "faster climate benefits than any other GHG reduction. N₂O (GWP-100: 273) "
+        "primarily comes from agriculture and industrial processes. Values shown use "
+        "GWP-100 weighting (AR6). Source: ",
+        html.A("Our World in Data", href="https://github.com/owid/co2-data",
+               target="_blank", className="alert-link"),
+        " (compiled from EDGAR v8.0, PRIMAP-hist, CAIT/WRI). See the ",
+        html.A("global Methane & GHGs page", href="/methane"),
+        " for top emitters and sources breakdown.",
+    ], color="light", className="small py-2 mt-3 border"))
+    return html.Div(children, className="tab-content-inner mt-3")
+
+
+def _build_investment_tab(iso3, country_name):
+    iea_region = _ISO3_TO_IEA_REGION.get(iso3, "")
+    investment_df = get_investment()
+    all_subsidies = get_subsidies()
+    country_subs = all_subsidies[all_subsidies["iso3"] == iso3] if not all_subsidies.empty else pd.DataFrame()
+    sub_indicators = get_subsidy_indicators()
+    country_indicators = sub_indicators[sub_indicators["iso3"] == iso3] if not sub_indicators.empty else pd.DataFrame()
+
+    children = []
+    if iea_region:
+        region_inv_fig = regional_investment_chart(investment_df, iea_region)
+        children.extend([
+            html.H6(f"Energy Investment: {iea_region}", className="fw-bold mb-1"),
+            dcc.Graph(figure=region_inv_fig, config=_GRAPH_CONFIG),
+        ])
+    if not country_subs.empty:
+        subsidy_fig = country_subsidies_chart(country_subs, country_name)
+        children.extend([
+            html.H6(f"{country_name}: Fossil Fuel Subsidies", className="fw-bold mt-4 mb-1"),
+            dcc.Graph(figure=subsidy_fig, config=_GRAPH_CONFIG),
+            *_build_subsidy_indicators_card(country_indicators, country_name),
+        ])
+    else:
+        children.append(html.Div([
+            html.H6("Fossil Fuel Subsidies", className="fw-bold mt-4 mb-1"),
+            html.P(f"No fossil fuel subsidy data available for {country_name} "
+                   "in the IEA database. This typically means subsidies are minimal "
+                   "or the country is not covered.", className="text-muted small"),
+        ]))
+
+    if not children:
+        return html.P("No investment data available.", className="text-muted mt-3")
+
+    children.append(dbc.Alert([
+        html.Strong("Sources: "),
+        "Investment: ",
+        html.A("IEA World Energy Investment 2025",
+               href="https://www.iea.org/reports/world-energy-investment-2025",
+               target="_blank", className="alert-link"),
+        " (regional data, 2024 real USD). Subsidies: ",
+        html.A("IEA Fossil Fuel Subsidies Database",
+               href="https://www.iea.org/data-and-statistics/data-product/fossil-fuel-subsidies-database",
+               target="_blank", className="alert-link"),
+        " (explicit subsidies only, 2024 real USD).",
+    ], color="light", className="small py-2 mt-3 border"))
+    return html.Div(children, className="tab-content-inner mt-3")
+
+
+def _build_peers_tab(iso3, country_name, continent):
+    meta_df = get_country_meta()
+    fig = peer_comparison_bars(
+        iso3, country_name, continent,
+        get_emissions(), get_energy_mix(), meta_df,
+    )
+    if not fig.data:
+        return html.P(f"No peer comparison data available for {country_name}.", className="text-muted mt-3")
+    return html.Div([
+        dcc.Graph(figure=fig, config=_GRAPH_CONFIG),
+        dbc.Alert([
+            html.Strong("Comparison group: "),
+            f"Global average, {continent} regional average, and the top 5 "
+            "global emitters by total GHG. Latest available year per country. "
+            "The selected country's bar is highlighted.",
+        ], color="light", className="small py-2 mt-3 border"),
+    ], className="tab-content-inner mt-3")
 
 
 # ---------------------------------------------------------------------------
@@ -418,31 +476,36 @@ def _build_summary(country_name: str, stats: dict) -> str:
     prev_year     = stats.get("prev_year", year - 10)
     co2_pc        = stats.get("co2_per_capita_t")
 
-    # -- Sentence 1: renewable characterization --
-    if renewable_pct is None or (isinstance(renewable_pct, float) and pd.isna(renewable_pct)):
-        s1 = f"Renewable electricity generation data for {country_name} is limited."
-    elif renewable_pct >= 70:
-        s1 = (
-            f"{country_name} is a renewable electricity leader, generating "
-            f"{renewable_pct:.0f}% of its electricity from renewables."
-        )
-    elif renewable_pct >= 40:
-        s1 = (
-            f"{country_name} generates {renewable_pct:.0f}% of its electricity "
-            f"from renewables, with a growing clean energy sector."
-        )
-    elif renewable_pct >= 20:
-        s1 = (
-            f"{country_name} generates {renewable_pct:.0f}% of its electricity "
-            f"from renewables, with significant room to expand."
-        )
+    # -- Sentence 1: Renewables context --
+    s1 = ""
+    if renewable_pct is not None and not pd.isna(renewable_pct):
+        r = float(renewable_pct)
+        if r >= 80:
+            s1 = (
+                f"{country_name} has achieved an exceptionally high renewable "
+                f"electricity share at {r:.0f}%, largely from hydro and/or "
+                f"wind/solar resources."
+            )
+        elif r >= 50:
+            s1 = (
+                f"{country_name} generates over half its electricity from "
+                f"renewables ({r:.0f}%), a strong foundation for decarbonization."
+            )
+        elif r >= 20:
+            s1 = (
+                f"{country_name} generates {r:.0f}% of its electricity from "
+                f"renewables, with significant room to expand."
+            )
+        else:
+            s1 = (
+                f"{country_name}'s electricity system is predominantly fossil fuel-based, "
+                f"with renewables accounting for {r:.0f}% of generation."
+            )
     else:
-        s1 = (
-            f"{country_name}'s electricity system is predominantly fossil fuel-based, "
-            f"with renewables accounting for {renewable_pct:.0f}% of generation."
-        )
+        s1 = f"Renewable electricity generation data for {country_name} is limited."
 
     # -- Sentence 2: GHG trend --
+    s2 = ""
     if (ghg_latest is not None and ghg_prev is not None
             and not pd.isna(ghg_latest) and not pd.isna(ghg_prev) and ghg_prev > 0):
         pct_change = (ghg_latest - ghg_prev) / ghg_prev * 100
@@ -520,7 +583,6 @@ def _build_subsidy_indicators_card(indicators_df, country_name: str) -> list:
         return []
 
     row = indicators_df.iloc[0]
-    cards = []
 
     rate = row.get("subsidy_rate_pct")
     per_cap = row.get("subsidy_per_capita_usd")
@@ -560,7 +622,6 @@ def _build_carbon_price_card(iso3: str, country_name: str, price):
     """Build the carbon pricing status card for a country."""
     if price is not None and price > 0:
         badge_color = "success" if price >= 40 else ("warning" if price >= 10 else "secondary")
-        # Contextual note based on price level
         if price >= 100:
             context = "High — consistent with cost of carbon damage estimates."
         elif price >= 40:

@@ -311,6 +311,18 @@ app.callback(
 
 
 # ---------------------------------------------------------------------------
+# Country page: lazy tab loading callback
+# ---------------------------------------------------------------------------
+from pages.country import build_tab_content
+
+app.callback(
+    dash.Output("country-tab-content", "children"),
+    dash.Input("country-tabs", "active_tab"),
+    dash.Input("country-iso3-store", "data"),
+)(build_tab_content)
+
+
+# ---------------------------------------------------------------------------
 # Pre-load data at import time (works for both `python app.py` AND gunicorn)
 # ---------------------------------------------------------------------------
 preload_all()
