@@ -250,16 +250,12 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Stat cards in country header row */
+/* Stat cards in country header row — static display, not interactive */
 .country-stat-card {
   border-radius: 10px;
   border: 1px solid #e9ecef;
   background: #ffffff;
-  transition: box-shadow 0.15s ease;
-}
-
-.country-stat-card:hover {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
+  cursor: default;
 }
 
 /* Tab inner content padding */

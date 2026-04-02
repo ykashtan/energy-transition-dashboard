@@ -31,6 +31,7 @@ from utils.data_loader import (
     get_imf_subsidies,
     get_heat_deaths_reference, get_lancet_heat_mortality,
     get_climate_disasters,
+    get_ev_sales_share, get_electrification_kpis,
 )
 from components.kpi_card import make_hero_stats_row, make_thematic_stats_row, HERO_KEYS
 from components.context_charts import (
@@ -46,7 +47,21 @@ dash.register_page(__name__, path="/", title="Energy Transition Dashboard")
 
 
 # ---------------------------------------------------------------------------
-# Figure builders — called once per page load; data is pre-loaded in memory
+# Figure cache — figures are expensive to build; cache them at module level.
+# Data is pre-loaded and never changes, so figures only need building once.
+# ---------------------------------------------------------------------------
+_FIGURE_CACHE: dict = {}
+
+
+def _cached_fig(key: str, builder):
+    """Return a cached figure, building it on first call only."""
+    if key not in _FIGURE_CACHE:
+        _FIGURE_CACHE[key] = builder()
+    return _FIGURE_CACHE[key]
+
+
+# ---------------------------------------------------------------------------
+# Figure builders — built once and cached for all subsequent requests
 # ---------------------------------------------------------------------------
 
 def _build_emissions_pathways_fig():
@@ -210,6 +225,105 @@ def _build_predictions_preview_fig():
         )
         fig.update_layout(height=260, paper_bgcolor="rgba(0,0,0,0)",
                           plot_bgcolor="#ffffff",
+                          xaxis=dict(visible=False), yaxis=dict(visible=False))
+        return fig
+
+
+def _build_electrification_kpi_bar():
+    """Build hero-style KPI cards for the Electrification section."""
+    ekpis = get_electrification_kpis()
+    if not ekpis:
+        return html.P("Electrification data unavailable.", className="text-muted")
+
+    ev_share = ekpis.get("ev_share_global", {})
+    ev_stock = ekpis.get("ev_stock_global", {})
+    n_tipping = ekpis.get("n_regions_past_tipping", {})
+    ev_china = ekpis.get("ev_share_china", {})
+
+    cards = []
+    card_data = [
+        ("bi-ev-front", "Global EV share", f"{ev_share.get('value', '?')}%",
+         f"{ev_share.get('year', '')} — new car sales", ev_share.get("source", "")),
+        ("bi-car-front", "Global EV fleet", f"{ev_stock.get('value', '?')}M",
+         f"{ev_stock.get('year', '')} — vehicles on road", ev_stock.get("source", "")),
+        ("bi-graph-up-arrow", "Markets past 5%",
+         f"{n_tipping.get('value', '?')}/{n_tipping.get('total', '?')}",
+         "Key markets past tipping point", n_tipping.get("source", "")),
+        ("bi-flag", "China EV share", f"{ev_china.get('value', '?')}%",
+         f"{ev_china.get('year', '')} — world's largest market", ev_china.get("source", "")),
+    ]
+    for icon, label, value, detail, source in card_data:
+        cards.append(
+            dbc.Col(
+                dbc.Card(dbc.CardBody([
+                    html.Div([
+                        html.I(className=f"bi {icon} me-1 text-primary small"),
+                        html.Small(label, className="text-muted"),
+                    ], className="d-flex align-items-center"),
+                    html.Div(value, className="fs-3 fw-bold mt-1"),
+                    html.Small(detail, className="text-muted"),
+                    html.Div(html.Small(source, className="text-muted",
+                                        style={"fontSize": "0.7rem"}), className="mt-1") if source else None,
+                ], className="py-2 px-3"), className="h-100",
+                    style={"borderStyle": "dashed", "borderColor": "#dee2e6"}),
+                xs=12, sm=6, md=3, className="mb-3",
+            )
+        )
+    return dbc.Row(cards, className="g-3")
+
+
+def _build_ev_scurve_fig():
+    """Build the EV adoption S-curve chart — key markets over time."""
+    _std_layout = dict(
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#ffffff",
+        font=dict(family="Inter, Helvetica Neue, Arial, sans-serif", size=12),
+        margin=dict(l=60, r=24, t=40, b=50), height=400, hovermode="x unified",
+        xaxis=dict(showgrid=True, gridcolor="#f0f0f0", tickformat="d"),
+        yaxis=dict(showgrid=True, gridcolor="#f0f0f0"),
+    )
+    try:
+        df = get_ev_sales_share()
+        if df.empty:
+            raise ValueError("No EV data available")
+        # Select key markets for the S-curve display
+        highlight = ["Norway", "China", "EU27", "USA", "World", "Thailand", "Brazil", "India"]
+        colors = {
+            "Norway": "#1b5e20", "China": "#d32f2f", "EU27": "#1565c0",
+            "USA": "#6a1b9a", "World": "#212121", "Thailand": "#e65100",
+            "Brazil": "#2e7d32", "India": "#ff6f00",
+        }
+        fig = go.Figure()
+        for region in highlight:
+            sub = df[df["region"] == region].sort_values("year")
+            if sub.empty:
+                continue
+            is_world = region == "World"
+            fig.add_trace(go.Scatter(
+                x=sub["year"], y=sub["ev_share_pct"],
+                mode="lines+markers",
+                line=dict(color=colors.get(region, "#666"), width=3 if is_world else 1.5,
+                          dash="solid" if is_world else "solid"),
+                marker=dict(size=5 if is_world else 3),
+                name=region,
+                hovertemplate=f"<b>{region}</b> %{{x}}: %{{y:.1f}}%<extra></extra>",
+            ))
+        # Add 5% tipping point line
+        fig.add_hline(y=5, line_dash="dash", line_color="#f39c12", line_width=1.5,
+                      annotation_text="5% tipping point", annotation_position="bottom left",
+                      annotation_font_size=10, annotation_font_color="#f39c12")
+        fig.update_layout(
+            title=dict(text="EV Adoption S-Curves by Market", font=dict(size=14)),
+            yaxis_title="EV share of new car sales (%)",
+            legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5),
+            **_std_layout,
+        )
+        return fig
+    except Exception as exc:
+        fig = go.Figure()
+        fig.add_annotation(text=f"Chart unavailable: {exc}",
+                           xref="paper", yref="paper", x=0.5, y=0.5,
+                           showarrow=False, font=dict(size=12, color="#6c757d"))
+        fig.update_layout(height=400, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#ffffff",
                           xaxis=dict(visible=False), yaxis=dict(visible=False))
         return fig
 
@@ -411,7 +525,7 @@ def _build_hero_modals() -> list:
             dbc.ModalBody([
                 dcc.Graph(
                     id=f"hero-modal-chart-{key}",
-                    figure=_build_hero_trendline(key),
+                    figure=_cached_fig(f"hero_{key}", lambda k=key: _build_hero_trendline(k)),
                     config={"responsive": True, "displayModeBar": True, "displaylogo": False},
                 ),
                 html.P(note, className="small text-muted mt-2") if note else None,
@@ -925,7 +1039,7 @@ def layout(**kwargs):
                     **{"aria-label": "Chart showing global CO₂ emissions compared to IPCC 1.5°C, 2°C, and 2.5°C pathway ranges"},
                     children=dcc.Graph(
                         id="emissions-section-figure",
-                        figure=_build_emissions_pathways_fig(),
+                        figure=_cached_fig("emissions", _build_emissions_pathways_fig),
                         config={"responsive": True, "displayModeBar": True,
                                 "modeBarButtonsToRemove": ["lasso2d", "select2d"],
                                 "displaylogo": False},
@@ -998,7 +1112,7 @@ def layout(**kwargs):
                     **{"aria-label": "Chart showing global renewable capacity vs IEA Net Zero milestones"},
                     children=dcc.Graph(
                         id="energy-section-figure",
-                        figure=_build_deployment_tracker_fig(),
+                        figure=_cached_fig("deployment", _build_deployment_tracker_fig),
                         config={"responsive": True, "displayModeBar": False},
                     ),
                 ),
@@ -1041,7 +1155,7 @@ def layout(**kwargs):
                     **{"aria-label": "Investment and subsidies chart"},
                     children=dcc.Graph(
                         id="investment-section-figure",
-                        figure=_build_investment_fig(),
+                        figure=_cached_fig("investment", _build_investment_fig),
                         config={"responsive": True, "displayModeBar": False},
                     ),
                 ),
@@ -1185,7 +1299,7 @@ def layout(**kwargs):
                     **{"aria-label": "Chart showing LCOE cost declines for solar, wind, and battery storage since 2010"},
                     children=dcc.Graph(
                         id="cost-revolution-figure",
-                        figure=_build_cost_revolution_fig(),
+                        figure=_cached_fig("cost", _build_cost_revolution_fig),
                         config={
                             "responsive": True,
                             "displayModeBar": True,
@@ -1251,7 +1365,7 @@ def layout(**kwargs):
                     **{"aria-label": "Predictions vs reality chart"},
                     children=dcc.Graph(
                         id="predictions-section-figure",
-                        figure=_build_predictions_fan_fig("solar"),
+                        figure=_cached_fig("predictions_solar", lambda: _build_predictions_fan_fig("solar")),
                         config={"responsive": True, "displayModeBar": True,
                                 "modeBarButtonsToRemove": ["lasso2d", "select2d"],
                                 "displaylogo": False},
@@ -1290,7 +1404,7 @@ def layout(**kwargs):
                     **{"aria-label": "Health impact chart"},
                     children=dcc.Graph(
                         id="health-section-figure",
-                        figure=_build_health_mortality_fig(),
+                        figure=_cached_fig("health", _build_health_mortality_fig),
                         config={"responsive": True, "displayModeBar": False},
                     ),
                 ),
@@ -1336,6 +1450,49 @@ def layout(**kwargs):
                 html.Div(
                     dbc.Button("Explore health data by country \u2192", href="/country/USA",
                                color="primary", size="sm", outline=True),
+                    className="mt-2",
+                ),
+            ]),
+        ], fluid=False),
+
+        # =====================================================================
+        # Section 10: Electrification & Transport
+        # =====================================================================
+        dbc.Container([
+            html.Div(className="thematic-section", children=[
+                html.H2("Electrification & Transport", className="section-heading"),
+                html.P(
+                    "Electric vehicles are following the classic S-curve: slow adoption, then "
+                    "explosive growth once the 5\u201310% tipping point is crossed.",
+                    className="section-subheading",
+                ),
+                # KPI hero bar — from electrification_kpis.json
+                _build_electrification_kpi_bar(),
+                # EV S-curve chart
+                html.Div(
+                    id="electrification-chart-container",
+                    className="context-chart-card mt-3",
+                    **{"aria-label": "EV adoption S-curve chart"},
+                    children=dcc.Graph(
+                        id="electrification-section-figure",
+                        figure=_cached_fig("ev_scurve", _build_ev_scurve_fig),
+                        config={"responsive": True, "displayModeBar": False},
+                    ),
+                ),
+                dbc.Alert([
+                    html.Strong("Key insight: "),
+                    "Once EVs cross ~5% of new car sales, adoption accelerates sharply. "
+                    "Norway crossed 5% in 2013 and reached 92% by 2024. China crossed "
+                    "5% in 2019 and hit 48% by 2024. The US crossed 5% in 2022. "
+                    "13 of 15 key markets have now passed the 5% tipping point. ",
+                    html.Em("Source: IEA Global EV Outlook 2025."),
+                ], color="secondary", className="small py-2 mt-2"),
+                html.Div(
+                    dcc.Link(
+                        "Explore tipping points in detail \u2192",
+                        href="/tipping-points",
+                        className="btn btn-outline-primary btn-sm",
+                    ),
                     className="mt-2",
                 ),
             ]),

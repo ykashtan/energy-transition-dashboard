@@ -51,6 +51,8 @@ server = app.server
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Home", href="/")),
+        dbc.NavItem(dbc.NavLink("Spotlights", href="/spotlight")),
+        dbc.NavItem(dbc.NavLink("Tipping Points", href="/tipping-points")),
         dbc.NavItem(dbc.NavLink("Methodology", href="/methodology")),
     ],
     brand="Energy Transition Dashboard",

@@ -197,6 +197,36 @@ def get_climate_disasters() -> pd.DataFrame:
     return _load("climate_disasters.parquet")
 
 
+def get_ev_sales_share() -> pd.DataFrame:
+    """Return EV sales share data (region x year)."""
+    return _load("ev_sales_share.parquet")
+
+
+def get_ev_sales() -> pd.DataFrame:
+    """Return EV sales volume data (region x year)."""
+    return _load("ev_sales.parquet")
+
+
+def get_ev_stock() -> pd.DataFrame:
+    """Return EV stock/fleet data (region x year)."""
+    return _load("ev_stock.parquet")
+
+
+_ELEC_KPI_CACHE: dict = {}
+
+def get_electrification_kpis() -> dict:
+    """Return electrification KPIs (EV adoption, tipping points)."""
+    global _ELEC_KPI_CACHE
+    if not _ELEC_KPI_CACHE:
+        path = PROCESSED_DIR / "electrification_kpis.json"
+        if path.exists():
+            with open(path) as f:
+                _ELEC_KPI_CACHE = json.load(f)
+        else:
+            _ELEC_KPI_CACHE = {}
+    return _ELEC_KPI_CACHE
+
+
 def get_callahan_damages() -> pd.DataFrame:
     """Return Callahan & Mankin (2022) historical temperature-GDP damages.
     Country-level cumulative and annualized GDP impact from warming (1990-2014).
@@ -289,6 +319,7 @@ def preload_all():
         "investment.parquet", "subsidies.parquet", "subsidy_indicators.parquet",
         "ccus_projects.parquet", "vulnerability.parquet", "climate_disasters.parquet",
         "imf_subsidies.parquet", "imf_health_reference.parquet",
+        "ev_sales.parquet", "ev_sales_share.parquet", "ev_stock.parquet",
     ]
     for f in files:
         _load(f)
