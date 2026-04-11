@@ -1604,35 +1604,6 @@ def _build_optimism_section() -> dbc.Card:
         ], className="mt-1 small"),
     ], className="mb-3")
 
-    # Net score display (center)
-    net_display = html.Div([
-        html.Div([
-            html.Span(
-                "Net Score",
-                className="text-muted small d-block text-center mb-1",
-            ),
-            html.Div(
-                f"{net_prefix}{net_score}",
-                className="text-center fw-bold",
-                style={
-                    "fontSize": "2.8rem",
-                    "color": net_color,
-                    "lineHeight": "1.1",
-                },
-            ),
-            html.Div(
-                f"= {progress_score} - ({danger_score} x 0.5)",
-                className="text-center text-muted",
-                style={"fontSize": "0.75rem"},
-            ),
-        ], style={
-            "border": f"2px solid {net_color}",
-            "borderRadius": "12px",
-            "padding": "12px 20px",
-            "backgroundColor": "white",
-        }),
-    ], className="d-flex justify-content-center mb-3")
-
     # Scenario badges
     scenario_badges = html.Div([
         html.Span("Sensitivity: ", className="small fw-bold me-2"),
@@ -1842,13 +1813,12 @@ def _build_optimism_section() -> dbc.Card:
                 "via TCRE (IPCC AR6). The scoring rule: 1.5\u00b0C = 0 (Paris met), "
                 "2.0\u00b0C = 50, 3.1\u00b0C = 100 (current policies).",
             ], className="mb-2"),
-            html.P([
-                "The ",
-                html.Strong("Net Score = Progress - (Risk \u00d7 0.5)"),
-                ". The 0.5 factor means maximum risk reduces but does not eliminate "
-                "progress \u2014 reflecting that the dashboard tracks whether our "
-                "clean energy response is fast enough, not providing a final judgment.",
-            ], className="mb-2"),
+            html.P(
+                "The two scores are shown side by side rather than combined into a "
+                "single number \u2014 reflecting that progress and risk are both real "
+                "and shouldn't be collapsed into a false summary.",
+                className="mb-2",
+            ),
             html.P([
                 html.Em(
                     "This score is thought-provoking, not definitive. "
@@ -1872,17 +1842,10 @@ def _build_optimism_section() -> dbc.Card:
             ], className="mb-0 fw-bold"),
         ]),
         dbc.CardBody([
-            # Dual bars + net score
-            dbc.Row([
-                dbc.Col([
-                    progress_bar,
-                    danger_bar,
-                ], md=7, lg=8),
-                dbc.Col([
-                    net_display,
-                    scenario_badges,
-                ], md=5, lg=4),
-            ]),
+            # Dual bars
+            progress_bar,
+            danger_bar,
+            scenario_badges,
 
             html.Hr(className="my-3"),
 
