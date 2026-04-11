@@ -29,11 +29,16 @@ _TECH_COLORS = {
     "ev_share_China":          "#e74c3c",
     "ev_share_World":          "#2c3e50",
     "ev_share_USA":            "#3498db",
+    "ev_share_India":          "#e67e22",
+    "ev_share_Viet_Nam":       "#9b59b6",
     "ev_share_Germany":        "#f39c12",
     "ev_share_Sweden":         "#2980b9",
     "solar_share_global":      "#f1c40f",
     "wind_share_global":       "#3498db",
     "renewable_share_global":  "#27ae60",
+    "electric_trucks_global":  "#e67e22",
+    "heat_pumps_global":       "#e74c3c",
+    "induction_cooking_global":"#9b59b6",
 }
 
 _TECH_LABELS = {
@@ -41,6 +46,8 @@ _TECH_LABELS = {
     "ev_share_China":          "China EVs",
     "ev_share_World":          "Global EVs",
     "ev_share_USA":            "USA EVs",
+    "ev_share_India":          "India EVs",
+    "ev_share_Viet_Nam":       "Vietnam EVs",
     "ev_share_Germany":        "Germany EVs",
     "ev_share_Sweden":         "Sweden EVs",
     "ev_share_France":         "France EVs",
@@ -48,6 +55,9 @@ _TECH_LABELS = {
     "solar_share_global":      "Global Solar",
     "wind_share_global":       "Global Wind",
     "renewable_share_global":  "Global Renewables",
+    "electric_trucks_global":  "Electric Trucks",
+    "heat_pumps_global":       "Heat Pumps",
+    "induction_cooking_global":"Induction Cooking",
 }
 
 
@@ -241,12 +251,12 @@ def historical_scurve_gallery(ev_share_df, energy_mix_df, params):
 
     # --- EV share panels ---
     ev_gallery_regions = [
+        ("World", "ev_share_World", "Global: EV Sales Share"),
         ("Norway", "ev_share_Norway", "Norway: EV Sales Share"),
         ("China", "ev_share_China", "China: EV Sales Share"),
-        ("World", "ev_share_World", "Global: EV Sales Share"),
         ("USA", "ev_share_USA", "USA: EV Sales Share"),
-        ("Sweden", "ev_share_Sweden", "Sweden: EV Sales Share"),
-        ("United Kingdom", "ev_share_United_Kingdom", "UK: EV Sales Share"),
+        ("India", "ev_share_India", "India: EV Sales Share"),
+        ("Viet Nam", "ev_share_Viet_Nam", "Vietnam: EV Sales Share"),
     ]
 
     for region, key, title in ev_gallery_regions:
@@ -301,6 +311,42 @@ def historical_scurve_gallery(ev_share_df, energy_mix_df, params):
                 "Global: Wind Share of Electricity",
             )
             figures.append(("wind_share_global", fig))
+
+    # --- Synthetic data panels (heat pumps, induction cooking, electric trucks) ---
+    # These use synthetic data points stored in scurve_params with "synthetic": true
+    synthetic_panels = [
+        ("heat_pumps_global", "Global: Heat Pump Share of Heating Sales",
+         np.array([2010, 2012, 2015, 2017, 2019, 2020, 2021, 2022, 2023, 2024]),
+         np.array([1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.5, 8.5, 9.0, 10.0])),
+        ("induction_cooking_global", "Global: Induction Cooking Share of Appliance Sales",
+         np.array([2010, 2013, 2015, 2017, 2019, 2020, 2021, 2022, 2023, 2024]),
+         np.array([0.5, 0.8, 1.0, 1.5, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])),
+    ]
+
+    # Electric trucks — compute share from ev_sales data if available
+    try:
+        from utils.data_loader import get_ev_sales
+        truck_df = get_ev_sales()
+        if not truck_df.empty:
+            trucks = truck_df[
+                (truck_df["mode"] == "Trucks") & (truck_df["region"] == "World")
+            ].sort_values("year")
+            if not trucks.empty:
+                GLOBAL_TRUCK_SALES = 3_500_000
+                t_years = trucks["year"].values
+                t_share = (trucks["ev_sales"].values / GLOBAL_TRUCK_SALES * 100)
+                synthetic_panels.insert(0, (
+                    "electric_trucks_global",
+                    "Global: Electric Truck Sales Share",
+                    t_years, t_share,
+                ))
+    except Exception:
+        pass
+
+    for key, title, years_data, values_data in synthetic_panels:
+        p = params.get(key)
+        fig = _build_single_scurve(years_data, values_data, p, key, title)
+        figures.append((key, fig))
 
     return figures
 

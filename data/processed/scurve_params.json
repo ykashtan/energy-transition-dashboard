@@ -35,6 +35,24 @@
     "year_start": 2010,
     "year_end": 2024
   },
+  "ev_share_India": {
+    "K": 80.0,
+    "r": 0.4444,
+    "t0": 2031.8,
+    "r_squared": 0.906,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_Viet_Nam": {
+    "K": 80.0,
+    "r": 0.9114,
+    "t0": 2025.4,
+    "r_squared": 0.9725,
+    "n_points": 5,
+    "year_start": 2018,
+    "year_end": 2024
+  },
   "ev_share_Germany": {
     "K": 70.0,
     "r": 0.316,
@@ -97,5 +115,36 @@
     "n_points": 25,
     "year_start": 2000,
     "year_end": 2024
+  },
+  "electric_trucks_global": {
+    "K": 100.0,
+    "r": 0.1723,
+    "t0": 2046.6,
+    "r_squared": 0.4886,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "heat_pumps_global": {
+    "K": 60.0,
+    "r": 0.1499,
+    "t0": 2034.5,
+    "r_squared": 0.9909,
+    "n_points": 10,
+    "year_start": 2010,
+    "year_end": 2024,
+    "synthetic": true,
+    "source": "IEA Heat Pump Market Report 2025, EHPA"
+  },
+  "induction_cooking_global": {
+    "K": 50.0,
+    "r": 0.17,
+    "t0": 2036.6,
+    "r_squared": 0.9876,
+    "n_points": 10,
+    "year_start": 2010,
+    "year_end": 2024,
+    "synthetic": true,
+    "source": "IEA Energy Efficiency 2025 (estimated)"
   }
 }

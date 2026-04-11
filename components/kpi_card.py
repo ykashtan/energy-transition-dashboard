@@ -232,12 +232,100 @@ HERO_KEYS = [
 ]
 
 
+def _make_warming_hero_card(kpi_data: dict) -> html.Div:
+    """
+    Build a custom hero card for the warming KPI showing both
+    current-policies warming (3.1°C) and S-curve technology trajectory (~2.4°C).
+    """
+    from utils.data_loader import get_temperature_trajectory
+
+    policy_temp = kpi_data.get("value", 3.1)
+    traj = get_temperature_trajectory()
+    scurve_temp = traj.get("scenarios", {}).get("scurve_central", {}).get("peak_temp_c") if traj else None
+
+    # Build tooltip
+    note = kpi_data.get("note", "")
+    source = kpi_data.get("source", "")
+    scurve_note = ""
+    if scurve_temp:
+        scurve_note = (
+            f" | S-curve estimate ({scurve_temp}\u00b0C): bottom-up projection "
+            "from technology adoption trajectories (see Trajectories page)."
+        )
+    tooltip = dbc.Tooltip(
+        note + scurve_note,
+        target="kpi-info-current_policies_warming_c",
+        placement="top",
+        style={"maxWidth": "400px"},
+    )
+
+    card = dbc.Card(
+        dbc.CardBody([
+            html.Div(
+                html.I(
+                    className="bi bi-info-circle text-muted",
+                    id="kpi-info-current_policies_warming_c",
+                    style={"cursor": "pointer", "fontSize": "0.85rem"},
+                ),
+                className="d-flex justify-content-end mb-1",
+            ),
+            tooltip,
+
+            # Policy warming (large, red-tinted)
+            html.Div([
+                html.Span(f"{policy_temp}", className="display-5 fw-bold",
+                          style={"color": "#e74c3c"}),
+                html.Span(" \u00b0C", className="fs-5 text-muted"),
+            ], className="d-flex align-items-baseline gap-1"),
+            html.Div(
+                "Current policies warming",
+                className="fs-6 text-muted mt-1",
+                style={"fontSize": "0.85rem"},
+            ),
+
+            # S-curve warming (smaller, blue, below)
+            html.Div([
+                html.Span(
+                    f"{scurve_temp}\u00b0C" if scurve_temp else "\u2014",
+                    className="fw-bold",
+                    style={"color": "#3498db", "fontSize": "1.4rem"},
+                ),
+                html.Span(
+                    " if tech S-curves continue",
+                    className="text-muted",
+                    style={"fontSize": "0.75rem"},
+                ),
+            ], className="mt-2 d-flex align-items-baseline gap-1"),
+
+            # Source
+            html.Div(
+                html.A(
+                    "UNEP 2024 / S-curve model",
+                    href="/methodology#source-emissions-climate",
+                    className="text-muted",
+                    style={"fontSize": "0.7rem", "textDecoration": "none"},
+                ),
+                className="mt-1",
+            ),
+            html.Div(
+                html.Small("Click for historical trend", className="text-primary"),
+                className="mt-1",
+                style={"fontSize": "0.65rem"},
+            ),
+        ]),
+        className="kpi-card kpi-card-hero h-100 border-0 shadow-sm",
+        style={"cursor": "pointer"},
+    )
+
+    return html.Div(card, id="hero-card-current_policies_warming_c", n_clicks=0)
+
+
 def make_hero_stats_row(kpis: dict) -> dbc.Row:
     """
     Build the 5-card hero statistics row (above the fold).
 
     One representative metric per section:
-      1. Projected warming (°C) — Emissions & Pathways
+      1. Projected warming (°C) — Emissions & Pathways (dual: policy + S-curve)
       2. Renewable share of electricity (%) — Clean Energy
       3. Renewable share of total energy (%) — Clean Energy (total)
       4. Clean energy investment ($T) — Investment
@@ -246,8 +334,11 @@ def make_hero_stats_row(kpis: dict) -> dbc.Row:
     cols = []
     for key in HERO_KEYS:
         kpi_data = kpis.get(key, {"label": key, "value": None, "status": "placeholder"})
-        card = make_kpi_card(key, kpi_data, card_size="hero",
-                            clickable_id=f"hero-card-{key}")
+        if key == "current_policies_warming_c":
+            card = _make_warming_hero_card(kpi_data)
+        else:
+            card = make_kpi_card(key, kpi_data, card_size="hero",
+                                clickable_id=f"hero-card-{key}")
         cols.append(
             dbc.Col(card, xs=12, sm=6, lg=True, className="mb-3")
         )

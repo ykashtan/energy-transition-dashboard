@@ -185,11 +185,7 @@ def layout(**kwargs):
     # Load nascent tech data
     nascent_data = get_nascent_tech_data()
 
-    # Build the initial scenario figure (default: Global EVs)
     params = get_scurve_params()
-    initial_scenario = trajectory_scenario_figure(
-        "ev_share_World", params, nascent_data
-    )
 
     return dbc.Container([
 
@@ -340,44 +336,7 @@ def layout(**kwargs):
         html.Hr(className="my-4"),
 
         # ===================================================================
-        # Section 4: Trajectory Scenario Explorer
-        # ===================================================================
-        html.H3("Scenario Explorer", className="mb-3"),
-        html.P(
-            "Select a technology to see three scenario trajectories: "
-            "fast (analogous to Norway/China-like policy support), "
-            "moderate (continuation of the fitted trend), and "
-            "slow (policy headwinds or supply constraints). "
-            "The shaded band shows the range of plausible outcomes.",
-            className="text-muted mb-3",
-        ),
-
-        dbc.Row([
-            dbc.Col(
-                dbc.Select(
-                    id="trajectory-tech-selector",
-                    options=_SCENARIO_OPTIONS,
-                    value="ev_share_World",
-                    className="mb-3",
-                ),
-                md=4,
-            ),
-        ]),
-
-        dbc.Row(
-            dbc.Col(
-                dcc.Graph(
-                    id="trajectory-scenario-figure",
-                    figure=initial_scenario,
-                    config=GRAPH_CONFIG,
-                ),
-            ),
-        ),
-
-        html.Hr(className="my-4"),
-
-        # ===================================================================
-        # Section 4b: Nascent Technologies
+        # Section 4: Nascent Technologies
         # ===================================================================
         html.H3("Nascent Technologies: Distance to Tipping Point", className="mb-3"),
         html.P(
@@ -390,6 +349,7 @@ def layout(**kwargs):
         dbc.Row([
             _nascent_progress_card(key, info)
             for key, info in nascent_data.items()
+            if not key.startswith("_")  # skip metadata keys like _methodology
         ]) if nascent_data else dbc.Alert(
             "Nascent technology data not loaded.", color="secondary"
         ),

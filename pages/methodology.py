@@ -947,6 +947,197 @@ def layout(**kwargs):
                 ". A change within \u00b10.5% is classified as \u201cstable\u201d (\u2192).",
             ], className="small"),
 
+            # --- 2k: S-Curve Technology Trajectories ---
+            html.H4("S-Curve Technology Trajectories",
+                     className="fw-bold mt-4 mb-2 text-primary",
+                     id="source-scurve-model"),
+
+            html.H6("S-Curve logistic model", className="fw-bold mt-3"),
+            html.P([
+                "Technology adoption trajectories are modelled as logistic S-curves: ",
+                html.Code("S(t) = K / (1 + exp(-r \u00d7 (t \u2212 t\u2080)))"),
+                ". Parameters (K, r, t\u2080) are fitted using ",
+                html.Code("scipy.optimize.curve_fit"),
+                " with constrained bounds.",
+            ], className="small"),
+            html.Ul([
+                html.Li([
+                    html.Strong("EV data: "),
+                    "IEA Global EV Outlook 2025 via Global EV Data Explorer.",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Solar/wind share: "),
+                    "Our World in Data (from Ember Global Electricity Review).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("K (saturation) values: "),
+                    "Set using convergence of major energy forecasts rather than "
+                    "pure historical fitting for early-growth technologies.",
+                ], className="small"),
+            ]),
+
+            html.H6("Saturation levels (K)", className="fw-bold mt-3"),
+            html.Ul([
+                html.Li([
+                    html.Strong("EV sales share: "),
+                    "K\u2098\u1d62\u2099 = 70\u201380% based on ICE phase-out mandates "
+                    "(EU 2035, UK 2035, China targets).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Solar: "),
+                    "K = 40% (IEA NZE 2050: 43%, DNV 2050: 40%, BNEF base: 22%).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Wind: "),
+                    "K = 30% (IEA NZE 2050: 31%, DNV 2050: 29%, IRENA 1.5\u00b0C: 35%).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Renewables overall: "),
+                    "K\u2098\u1d62\u2099 = 80% (IEA NZE 2050: ~90%, DNV: 69%+).",
+                ], className="small"),
+            ]),
+
+            html.H6("Nascent technology data", className="fw-bold mt-3"),
+            html.Ul([
+                html.Li(
+                    "Editorially curated from IEA, IATA, Global Maritime Forum, "
+                    "World Steel Association.",
+                    className="small",
+                ),
+                html.Li([
+                    html.Strong("Threshold framework: "),
+                    "Rogers Diffusion of Innovations milestones "
+                    "(5% inflection, 16% early majority, 50% majority).",
+                ], className="small"),
+                html.Li(
+                    "Each entry includes source URL, assessment date, and "
+                    "confidence level.",
+                    className="small",
+                ),
+            ]),
+
+            # --- 2l: Temperature Trajectory Model ---
+            html.H4("Temperature Trajectory Model",
+                     className="fw-bold mt-4 mb-2 text-primary",
+                     id="source-temperature-model"),
+
+            html.H6("Bottom-up temperature projection", className="fw-bold mt-3"),
+            html.P(
+                "Maps S-curve adoption rates to sector-by-sector fossil fuel "
+                "displacement, then converts cumulative CO\u2082 to temperature.",
+                className="small",
+            ),
+            html.Ul([
+                html.Li([
+                    html.Strong("8 sectors (% of global emissions): "),
+                    "electricity (25%), road transport (12%), aviation (2.5%), "
+                    "shipping (1.5%), industry (21%), buildings (6%), "
+                    "agriculture (22%), other (10%).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("TCRE: "),
+                    "0.45\u00b0C per 1000 GtCO\u2082 (IPCC AR6 WG1 best estimate, "
+                    "likely range 0.27\u20130.63).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Fleet turnover lag: "),
+                    "12 years for road transport (EV sales share \u2192 fleet share).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Demand growth: "),
+                    "1.5% declining to 0% over 50 years.",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Non-CO\u2082 forcing: "),
+                    "0.5\u00b0C baseline, declining as methane reduces.",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Three scenarios: "),
+                    "fast (r \u00d7 1.3), central (r \u00d7 1.0), slow (r \u00d7 0.7).",
+                ], className="small"),
+            ]),
+            dbc.Alert([
+                html.Strong("Intentionally simplified: "),
+                "This is a thought experiment, not a full integrated assessment "
+                "model (IAM). Key difference from UNEP 3.1\u00b0C: UNEP assumes "
+                "current policies; this model assumes current technology trajectories.",
+            ], color="warning", className="small py-2"),
+
+            # --- 2m: Optimism Meter ---
+            html.H4("Optimism Meter Methodology",
+                     className="fw-bold mt-4 mb-2 text-primary",
+                     id="source-optimism-meter"),
+
+            html.H6("Dual-score approach", className="fw-bold mt-3"),
+            html.Ul([
+                html.Li([
+                    html.Strong("Progress Score (0\u2013100): "),
+                    "emissions-weighted clean energy tipping points crossed (40 pts), "
+                    "technology/investment momentum (30 pts), "
+                    "gap to climate targets (30 pts).",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Climate Risk Score (0\u2013100): "),
+                    "derived from S-curve temperature projection. "
+                    "Scoring: 1.5\u00b0C = 0, 2.0\u00b0C = 50, 3.1\u00b0C = 100.",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Net Score: "),
+                    html.Code("Progress \u2212 (Risk \u00d7 0.5)"),
+                    ". The 0.5 factor means maximum risk reduces but does not "
+                    "eliminate progress.",
+                ], className="small"),
+            ]),
+
+            # --- 2n: Country Comparison Tool ---
+            html.H4("Country Comparison Tool",
+                     className="fw-bold mt-4 mb-2 text-primary",
+                     id="source-country-comparison"),
+
+            html.Ul([
+                html.Li([
+                    html.Strong("7 comparison metrics: "),
+                    "CO\u2082 trajectory, renewable share, energy mix, "
+                    "CO\u2082/capita, PM2.5 deaths, investment, "
+                    "vulnerability (ND-GAIN).",
+                ], className="small"),
+                html.Li(
+                    "Data sources are the same as the country detail pages.",
+                    className="small",
+                ),
+                html.Li(
+                    "Missing data is shown as a placeholder chart, not an "
+                    "empty panel.",
+                    className="small",
+                ),
+            ]),
+
+            # --- 2o: Country Spotlight Selection ---
+            html.H4("Country Spotlight Selection",
+                     className="fw-bold mt-4 mb-2 text-primary",
+                     id="source-country-spotlights"),
+
+            html.Ul([
+                html.Li(
+                    "18 countries in 6 analytically defensible categories.",
+                    className="small",
+                ),
+                html.Li([
+                    html.Strong("Framework: "),
+                    "WEF Energy Transition Index, Carnegie \u201celectrostate\u201d "
+                    "concept, crisis-driven vs policy-led transition literature.",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Selection criteria: "),
+                    "narratively distinctive, data-rich, globally representative.",
+                ], className="small"),
+                html.Li([
+                    html.Strong("Notable exclusions: "),
+                    "Morocco (pre-deployment projects), UK (overlaps Denmark), "
+                    "Bangladesh (limited data coverage).",
+                ], className="small"),
+            ]),
+
             html.Hr(),
 
             # ================================================================

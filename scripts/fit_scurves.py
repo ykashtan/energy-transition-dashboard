@@ -129,7 +129,8 @@ def main():
     print(f"\nLoaded ev_sales_share.parquet: {len(ev_df)} rows")
 
     # Regions to fit
-    ev_regions = ["Norway", "China", "World", "USA", "Germany", "Sweden", "France", "United Kingdom"]
+    ev_regions = ["Norway", "China", "World", "USA", "India", "Viet Nam",
+                  "Germany", "Sweden", "France", "United Kingdom"]
 
     # K_min per region: mature markets (Norway) can self-calibrate;
     # early-growth markets need a floor so the curve doesn't plateau at 20%.
@@ -139,6 +140,8 @@ def main():
         "China": 80,       # at ~48%, strong momentum
         "World": 80,       # at ~22%, definitely going higher
         "USA": 80,         # at ~10%, early growth
+        "India": 80,       # at ~2%, very early but massive market
+        "Viet Nam": 80,    # at ~17%, rapid growth with VinFast
         "Germany": 70,     # at ~25%, subsidy-cut dip is temporary
         "France": 70,      # at ~25%, EU mandate drives higher
         "United Kingdom": 70,  # at ~27%, ZEV mandate to 2035
@@ -257,6 +260,49 @@ def main():
         )
         if result is not None:
             results["renewable_share_global"] = result
+
+    # ----- Electric truck share (computed from ev_sales / total truck sales) -----
+    ev_sales_path = PROCESSED_DIR / "ev_sales.parquet"
+    if ev_sales_path.exists():
+        ev_sales_df = pd.read_parquet(ev_sales_path)
+        trucks = ev_sales_df[
+            (ev_sales_df["mode"] == "Trucks") & (ev_sales_df["region"] == "World")
+        ].sort_values("year")
+        if not trucks.empty:
+            # Global truck sales ~3.5M/yr (OICA); compute share
+            GLOBAL_TRUCK_SALES = 3_500_000
+            trucks = trucks.copy()
+            trucks["share_pct"] = trucks["ev_sales"] / GLOBAL_TRUCK_SALES * 100
+            print("\n--- Electric truck share S-curve ---")
+            result = fit_logistic(
+                trucks["year"].values, trucks["share_pct"].values,
+                label="electric_trucks_global", K_min=80,
+            )
+            if result is not None:
+                results["electric_trucks_global"] = result
+
+    # ----- Heat pumps global share (synthetic from known data points) -----
+    # Sources: IEA Heat Pumps Report, EHPA
+    # Known: ~3% in 2015, ~5% in 2019, ~10% in 2024 (global heating equipment sales)
+    print("\n--- Synthetic S-curves (heat pumps, induction cooking) ---")
+    hp_years = np.array([2010, 2012, 2015, 2017, 2019, 2020, 2021, 2022, 2023, 2024])
+    hp_share = np.array([1.5,  2.0,  3.0,  4.0,  5.0,  6.0,  7.5,  8.5,  9.0,  10.0])
+    result = fit_logistic(hp_years, hp_share, label="heat_pumps_global", K_min=60)
+    if result is not None:
+        results["heat_pumps_global"] = result
+        results["heat_pumps_global"]["synthetic"] = True
+        results["heat_pumps_global"]["source"] = "IEA Heat Pump Market Report 2025, EHPA"
+
+    # ----- Induction cooking global share (synthetic) -----
+    # Known: ~1% in 2015, ~3% in 2020, ~5% in 2024 (global cooking appliance sales)
+    # Already dominant in parts of Asia (China, Japan, Korea)
+    ic_years = np.array([2010, 2013, 2015, 2017, 2019, 2020, 2021, 2022, 2023, 2024])
+    ic_share = np.array([0.5,  0.8,  1.0,  1.5,  2.5,  3.0,  3.5,  4.0,  4.5,  5.0])
+    result = fit_logistic(ic_years, ic_share, label="induction_cooking_global", K_min=50)
+    if result is not None:
+        results["induction_cooking_global"] = result
+        results["induction_cooking_global"]["synthetic"] = True
+        results["induction_cooking_global"]["source"] = "IEA Energy Efficiency 2025 (estimated)"
 
     # ----- Write results -----
     output_path = PROCESSED_DIR / "scurve_params.json"
