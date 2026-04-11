@@ -306,6 +306,64 @@ def get_electrification_kpis() -> dict:
     return _KPI_CACHE["electrification_kpis"]
 
 
+# ---------------------------------------------------------------------------
+# S-curve / Trajectories page data (JSON)
+# ---------------------------------------------------------------------------
+
+_SCURVE_PARAMS_CACHE: dict = {}
+_NASCENT_TECH_CACHE: dict = {}
+_EXPERT_FORECASTS_CACHE: dict = {}
+_TEMP_TRAJECTORY_CACHE: dict = {}
+
+
+def get_scurve_params() -> dict:
+    """Return pre-fitted S-curve parameters (from fit_scurves.py)."""
+    global _SCURVE_PARAMS_CACHE
+    if not _SCURVE_PARAMS_CACHE:
+        path = PROCESSED_DIR / "scurve_params.json"
+        if path.exists():
+            with open(path) as f:
+                _SCURVE_PARAMS_CACHE = json.load(f)
+    return _SCURVE_PARAMS_CACHE
+
+
+def get_nascent_tech_data() -> dict:
+    """Return editorial data for nascent technologies (SAF, shipping, etc.)."""
+    global _NASCENT_TECH_CACHE
+    if not _NASCENT_TECH_CACHE:
+        path = PROCESSED_DIR / "nascent_tech_data.json"
+        if path.exists():
+            with open(path) as f:
+                _NASCENT_TECH_CACHE = json.load(f)
+    return _NASCENT_TECH_CACHE
+
+
+def get_expert_forecasts() -> dict:
+    """Return expert forecast ranges (IEA, RMI, RethinkX, BNEF)."""
+    global _EXPERT_FORECASTS_CACHE
+    if not _EXPERT_FORECASTS_CACHE:
+        path = PROCESSED_DIR / "expert_forecasts.json"
+        if path.exists():
+            with open(path) as f:
+                _EXPERT_FORECASTS_CACHE = json.load(f)
+    return _EXPERT_FORECASTS_CACHE
+
+
+def get_temperature_trajectory() -> dict:
+    """Return S-curve-based temperature trajectory data."""
+    global _TEMP_TRAJECTORY_CACHE
+    if not _TEMP_TRAJECTORY_CACHE:
+        path = PROCESSED_DIR / "temperature_trajectory.json"
+        if path.exists():
+            with open(path) as f:
+                _TEMP_TRAJECTORY_CACHE = json.load(f)
+    return _TEMP_TRAJECTORY_CACHE
+
+
+# ---------------------------------------------------------------------------
+# Preload all data
+# ---------------------------------------------------------------------------
+
 def preload_all():
     """Pre-load all available Parquet files into cache. Call at app startup."""
     files = [
@@ -322,4 +380,9 @@ def preload_all():
         _load(f)
     _load_kpis()
     get_electrification_kpis()
+    # Load trajectory JSON files (silently skip if not yet generated)
+    get_scurve_params()
+    get_nascent_tech_data()
+    get_expert_forecasts()
+    get_temperature_trajectory()
     print("[data_loader] All available data files pre-loaded.")

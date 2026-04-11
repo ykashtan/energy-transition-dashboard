@@ -1,0 +1,2859 @@
+{
+  "methodology": "Bottom-up S-curve displacement model. Maps technology adoption curves to sector-by-sector fossil fuel displacement, converts cumulative emissions to temperature via TCRE (IPCC AR6). This is a simplified thought experiment, not a full integrated assessment model.",
+  "baseline_year": 2024,
+  "baseline_emissions_gtco2e": 54.4,
+  "current_warming_c": 1.3,
+  "tcre_c_per_1000gtco2": 0.45,
+  "tcre_range": {
+    "low": 0.27,
+    "high": 0.63
+  },
+  "assumptions": {
+    "fleet_turnover_years": 12,
+    "co2_fraction_of_co2e": 0.75,
+    "demand_growth": "1.5% declining to 0% over 50 years",
+    "non_co2_forcing": "0.5\u00b0C baseline, declining 40% by 2100 as methane reduces",
+    "aviation_demand_growth": "3% declining to 0% over 40 years",
+    "saf_lifecycle_reduction": "80% per unit substituted",
+    "agriculture_reduction_rate": "0.5% per year (slow, policy-dependent)"
+  },
+  "sector_baselines": {
+    "electricity": {
+      "baseline_gtco2e": 13.6,
+      "share_of_total": 0.25,
+      "description": "Electricity & heat generation"
+    },
+    "road_transport": {
+      "baseline_gtco2e": 6.5,
+      "share_of_total": 0.12,
+      "description": "Road transport (cars, trucks, buses)"
+    },
+    "aviation": {
+      "baseline_gtco2e": 1.4,
+      "share_of_total": 0.025,
+      "description": "Aviation"
+    },
+    "shipping": {
+      "baseline_gtco2e": 0.8,
+      "share_of_total": 0.015,
+      "description": "Shipping"
+    },
+    "industry": {
+      "baseline_gtco2e": 11.4,
+      "share_of_total": 0.21,
+      "description": "Industry (steel, cement, chemicals)"
+    },
+    "buildings": {
+      "baseline_gtco2e": 3.3,
+      "share_of_total": 0.06,
+      "description": "Buildings (direct heating, cooking)"
+    },
+    "agriculture": {
+      "baseline_gtco2e": 12.0,
+      "share_of_total": 0.22,
+      "description": "Agriculture, forestry & land use"
+    },
+    "other": {
+      "baseline_gtco2e": 5.4,
+      "share_of_total": 0.1,
+      "description": "Waste, fugitive emissions, other"
+    }
+  },
+  "scurve_parameters_used": {
+    "electricity": "renewable_share_global from scurve_params.json",
+    "road_transport": "ev_share_World from scurve_params.json (with 12yr fleet lag)",
+    "aviation": "Assumed logistic K=80, r=0.20, t0=2042 (SAF adoption analogy)",
+    "shipping": "Assumed logistic K=70, r=0.18, t0=2044 (alt fuel adoption)",
+    "industry": "Assumed logistic K=60, r=0.07, t0=2048 (green H2 + EAF)",
+    "buildings": "Assumed logistic K=80, r=0.15, t0=2035 (heat pumps)"
+  },
+  "scenarios": {
+    "scurve_fast": {
+      "peak_temp_c": 2.41,
+      "peak_year": 2100,
+      "temp_2050": 2.11,
+      "temp_2100": 2.41,
+      "emissions_2050": 33.7,
+      "net_zero_year": null,
+      "trajectory": [
+        {
+          "year": 2024,
+          "emissions_gtco2e": 48.98,
+          "temp_c": 1.817
+        },
+        {
+          "year": 2025,
+          "emissions_gtco2e": 48.79,
+          "temp_c": 1.83
+        },
+        {
+          "year": 2026,
+          "emissions_gtco2e": 48.51,
+          "temp_c": 1.844
+        },
+        {
+          "year": 2027,
+          "emissions_gtco2e": 48.14,
+          "temp_c": 1.858
+        },
+        {
+          "year": 2028,
+          "emissions_gtco2e": 47.68,
+          "temp_c": 1.871
+        },
+        {
+          "year": 2029,
+          "emissions_gtco2e": 47.15,
+          "temp_c": 1.884
+        },
+        {
+          "year": 2030,
+          "emissions_gtco2e": 46.55,
+          "temp_c": 1.898
+        },
+        {
+          "year": 2031,
+          "emissions_gtco2e": 45.9,
+          "temp_c": 1.91
+        },
+        {
+          "year": 2032,
+          "emissions_gtco2e": 45.19,
+          "temp_c": 1.923
+        },
+        {
+          "year": 2033,
+          "emissions_gtco2e": 44.45,
+          "temp_c": 1.935
+        },
+        {
+          "year": 2034,
+          "emissions_gtco2e": 43.67,
+          "temp_c": 1.948
+        },
+        {
+          "year": 2035,
+          "emissions_gtco2e": 42.87,
+          "temp_c": 1.959
+        },
+        {
+          "year": 2036,
+          "emissions_gtco2e": 42.07,
+          "temp_c": 1.971
+        },
+        {
+          "year": 2037,
+          "emissions_gtco2e": 41.27,
+          "temp_c": 1.982
+        },
+        {
+          "year": 2038,
+          "emissions_gtco2e": 40.5,
+          "temp_c": 1.993
+        },
+        {
+          "year": 2039,
+          "emissions_gtco2e": 39.77,
+          "temp_c": 2.004
+        },
+        {
+          "year": 2040,
+          "emissions_gtco2e": 39.09,
+          "temp_c": 2.015
+        },
+        {
+          "year": 2041,
+          "emissions_gtco2e": 38.45,
+          "temp_c": 2.025
+        },
+        {
+          "year": 2042,
+          "emissions_gtco2e": 37.85,
+          "temp_c": 2.035
+        },
+        {
+          "year": 2043,
+          "emissions_gtco2e": 37.28,
+          "temp_c": 2.045
+        },
+        {
+          "year": 2044,
+          "emissions_gtco2e": 36.73,
+          "temp_c": 2.055
+        },
+        {
+          "year": 2045,
+          "emissions_gtco2e": 36.2,
+          "temp_c": 2.064
+        },
+        {
+          "year": 2046,
+          "emissions_gtco2e": 35.68,
+          "temp_c": 2.074
+        },
+        {
+          "year": 2047,
+          "emissions_gtco2e": 35.18,
+          "temp_c": 2.083
+        },
+        {
+          "year": 2048,
+          "emissions_gtco2e": 34.69,
+          "temp_c": 2.092
+        },
+        {
+          "year": 2049,
+          "emissions_gtco2e": 34.21,
+          "temp_c": 2.101
+        },
+        {
+          "year": 2050,
+          "emissions_gtco2e": 33.75,
+          "temp_c": 2.11
+        },
+        {
+          "year": 2051,
+          "emissions_gtco2e": 33.3,
+          "temp_c": 2.118
+        },
+        {
+          "year": 2052,
+          "emissions_gtco2e": 32.85,
+          "temp_c": 2.127
+        },
+        {
+          "year": 2053,
+          "emissions_gtco2e": 32.42,
+          "temp_c": 2.135
+        },
+        {
+          "year": 2054,
+          "emissions_gtco2e": 31.99,
+          "temp_c": 2.143
+        },
+        {
+          "year": 2055,
+          "emissions_gtco2e": 31.58,
+          "temp_c": 2.151
+        },
+        {
+          "year": 2056,
+          "emissions_gtco2e": 31.17,
+          "temp_c": 2.159
+        },
+        {
+          "year": 2057,
+          "emissions_gtco2e": 30.77,
+          "temp_c": 2.167
+        },
+        {
+          "year": 2058,
+          "emissions_gtco2e": 30.37,
+          "temp_c": 2.175
+        },
+        {
+          "year": 2059,
+          "emissions_gtco2e": 29.99,
+          "temp_c": 2.182
+        },
+        {
+          "year": 2060,
+          "emissions_gtco2e": 29.61,
+          "temp_c": 2.189
+        },
+        {
+          "year": 2061,
+          "emissions_gtco2e": 29.24,
+          "temp_c": 2.197
+        },
+        {
+          "year": 2062,
+          "emissions_gtco2e": 28.87,
+          "temp_c": 2.204
+        },
+        {
+          "year": 2063,
+          "emissions_gtco2e": 28.51,
+          "temp_c": 2.211
+        },
+        {
+          "year": 2064,
+          "emissions_gtco2e": 28.16,
+          "temp_c": 2.218
+        },
+        {
+          "year": 2065,
+          "emissions_gtco2e": 27.82,
+          "temp_c": 2.224
+        },
+        {
+          "year": 2066,
+          "emissions_gtco2e": 27.49,
+          "temp_c": 2.231
+        },
+        {
+          "year": 2067,
+          "emissions_gtco2e": 27.16,
+          "temp_c": 2.238
+        },
+        {
+          "year": 2068,
+          "emissions_gtco2e": 26.84,
+          "temp_c": 2.244
+        },
+        {
+          "year": 2069,
+          "emissions_gtco2e": 26.53,
+          "temp_c": 2.25
+        },
+        {
+          "year": 2070,
+          "emissions_gtco2e": 26.22,
+          "temp_c": 2.257
+        },
+        {
+          "year": 2071,
+          "emissions_gtco2e": 25.93,
+          "temp_c": 2.263
+        },
+        {
+          "year": 2072,
+          "emissions_gtco2e": 25.64,
+          "temp_c": 2.269
+        },
+        {
+          "year": 2073,
+          "emissions_gtco2e": 25.36,
+          "temp_c": 2.275
+        },
+        {
+          "year": 2074,
+          "emissions_gtco2e": 25.09,
+          "temp_c": 2.28
+        },
+        {
+          "year": 2075,
+          "emissions_gtco2e": 24.82,
+          "temp_c": 2.286
+        },
+        {
+          "year": 2076,
+          "emissions_gtco2e": 24.57,
+          "temp_c": 2.292
+        },
+        {
+          "year": 2077,
+          "emissions_gtco2e": 24.32,
+          "temp_c": 2.297
+        },
+        {
+          "year": 2078,
+          "emissions_gtco2e": 24.08,
+          "temp_c": 2.303
+        },
+        {
+          "year": 2079,
+          "emissions_gtco2e": 23.85,
+          "temp_c": 2.308
+        },
+        {
+          "year": 2080,
+          "emissions_gtco2e": 23.63,
+          "temp_c": 2.314
+        },
+        {
+          "year": 2081,
+          "emissions_gtco2e": 23.42,
+          "temp_c": 2.319
+        },
+        {
+          "year": 2082,
+          "emissions_gtco2e": 23.21,
+          "temp_c": 2.324
+        },
+        {
+          "year": 2083,
+          "emissions_gtco2e": 23.01,
+          "temp_c": 2.329
+        },
+        {
+          "year": 2084,
+          "emissions_gtco2e": 22.81,
+          "temp_c": 2.334
+        },
+        {
+          "year": 2085,
+          "emissions_gtco2e": 22.62,
+          "temp_c": 2.339
+        },
+        {
+          "year": 2086,
+          "emissions_gtco2e": 22.44,
+          "temp_c": 2.344
+        },
+        {
+          "year": 2087,
+          "emissions_gtco2e": 22.26,
+          "temp_c": 2.349
+        },
+        {
+          "year": 2088,
+          "emissions_gtco2e": 22.09,
+          "temp_c": 2.354
+        },
+        {
+          "year": 2089,
+          "emissions_gtco2e": 21.93,
+          "temp_c": 2.359
+        },
+        {
+          "year": 2090,
+          "emissions_gtco2e": 21.77,
+          "temp_c": 2.364
+        },
+        {
+          "year": 2091,
+          "emissions_gtco2e": 21.61,
+          "temp_c": 2.368
+        },
+        {
+          "year": 2092,
+          "emissions_gtco2e": 21.46,
+          "temp_c": 2.373
+        },
+        {
+          "year": 2093,
+          "emissions_gtco2e": 21.32,
+          "temp_c": 2.377
+        },
+        {
+          "year": 2094,
+          "emissions_gtco2e": 21.18,
+          "temp_c": 2.382
+        },
+        {
+          "year": 2095,
+          "emissions_gtco2e": 21.04,
+          "temp_c": 2.386
+        },
+        {
+          "year": 2096,
+          "emissions_gtco2e": 20.91,
+          "temp_c": 2.391
+        },
+        {
+          "year": 2097,
+          "emissions_gtco2e": 20.78,
+          "temp_c": 2.395
+        },
+        {
+          "year": 2098,
+          "emissions_gtco2e": 20.66,
+          "temp_c": 2.4
+        },
+        {
+          "year": 2099,
+          "emissions_gtco2e": 20.54,
+          "temp_c": 2.404
+        },
+        {
+          "year": 2100,
+          "emissions_gtco2e": 20.42,
+          "temp_c": 2.408
+        }
+      ],
+      "sector_breakdown": {
+        "electricity": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 9.84
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 9.78
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 9.53
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 9.09
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 8.5
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 7.77
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 6.95
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 6.09
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 5.24
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 4.42
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 3.66
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 3.01
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 2.45
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 1.98
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 1.6
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 1.28
+          }
+        ],
+        "road_transport": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 6.2
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 5.12
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 3.32
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 1.96
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.69
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 1.73
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 1.78
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 1.82
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 1.85
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 1.87
+          }
+        ],
+        "aviation": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 1.43
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 1.6
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 1.68
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 1.55
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.23
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 1.01
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.93
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.91
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.9
+          }
+        ],
+        "shipping": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 0.8
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 0.79
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 0.76
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 0.69
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 0.58
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 0.49
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.44
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.42
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.41
+          }
+        ],
+        "industry": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 10.65
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 10.29
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 9.8
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 9.17
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 8.44
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 7.67
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 6.93
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 6.28
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 5.76
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 5.37
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 5.1
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 4.91
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 4.79
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 4.71
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 4.65
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 4.62
+          }
+        ],
+        "buildings": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 2.97
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 2.58
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 1.98
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 1.38
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 0.99
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 0.79
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.71
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.68
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.67
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.66
+          }
+        ],
+        "agriculture": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 11.92
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 11.54
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 11.17
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 10.81
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 10.46
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 10.13
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 9.8
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 9.49
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 9.18
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 8.89
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 8.6
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 8.33
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 8.06
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 7.8
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 7.55
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 7.31
+          }
+        ],
+        "other": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 4.99
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 4.86
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 4.64
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 4.43
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 4.3
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 4.17
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 4.04
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 3.92
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 3.8
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 3.7
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 3.61
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 3.54
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 3.48
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 3.43
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 3.4
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 3.37
+          }
+        ]
+      }
+    },
+    "scurve_central": {
+      "peak_temp_c": 2.44,
+      "peak_year": 2100,
+      "temp_2050": 2.11,
+      "temp_2100": 2.44,
+      "emissions_2050": 34.8,
+      "net_zero_year": null,
+      "trajectory": [
+        {
+          "year": 2024,
+          "emissions_gtco2e": 47.56,
+          "temp_c": 1.816
+        },
+        {
+          "year": 2025,
+          "emissions_gtco2e": 47.37,
+          "temp_c": 1.829
+        },
+        {
+          "year": 2026,
+          "emissions_gtco2e": 47.11,
+          "temp_c": 1.843
+        },
+        {
+          "year": 2027,
+          "emissions_gtco2e": 46.77,
+          "temp_c": 1.856
+        },
+        {
+          "year": 2028,
+          "emissions_gtco2e": 46.38,
+          "temp_c": 1.869
+        },
+        {
+          "year": 2029,
+          "emissions_gtco2e": 45.92,
+          "temp_c": 1.882
+        },
+        {
+          "year": 2030,
+          "emissions_gtco2e": 45.4,
+          "temp_c": 1.894
+        },
+        {
+          "year": 2031,
+          "emissions_gtco2e": 44.84,
+          "temp_c": 1.907
+        },
+        {
+          "year": 2032,
+          "emissions_gtco2e": 44.23,
+          "temp_c": 1.919
+        },
+        {
+          "year": 2033,
+          "emissions_gtco2e": 43.6,
+          "temp_c": 1.931
+        },
+        {
+          "year": 2034,
+          "emissions_gtco2e": 42.94,
+          "temp_c": 1.943
+        },
+        {
+          "year": 2035,
+          "emissions_gtco2e": 42.27,
+          "temp_c": 1.955
+        },
+        {
+          "year": 2036,
+          "emissions_gtco2e": 41.6,
+          "temp_c": 1.966
+        },
+        {
+          "year": 2037,
+          "emissions_gtco2e": 40.94,
+          "temp_c": 1.977
+        },
+        {
+          "year": 2038,
+          "emissions_gtco2e": 40.31,
+          "temp_c": 1.988
+        },
+        {
+          "year": 2039,
+          "emissions_gtco2e": 39.7,
+          "temp_c": 1.999
+        },
+        {
+          "year": 2040,
+          "emissions_gtco2e": 39.13,
+          "temp_c": 2.01
+        },
+        {
+          "year": 2041,
+          "emissions_gtco2e": 38.6,
+          "temp_c": 2.02
+        },
+        {
+          "year": 2042,
+          "emissions_gtco2e": 38.09,
+          "temp_c": 2.03
+        },
+        {
+          "year": 2043,
+          "emissions_gtco2e": 37.62,
+          "temp_c": 2.04
+        },
+        {
+          "year": 2044,
+          "emissions_gtco2e": 37.17,
+          "temp_c": 2.05
+        },
+        {
+          "year": 2045,
+          "emissions_gtco2e": 36.74,
+          "temp_c": 2.06
+        },
+        {
+          "year": 2046,
+          "emissions_gtco2e": 36.33,
+          "temp_c": 2.07
+        },
+        {
+          "year": 2047,
+          "emissions_gtco2e": 35.93,
+          "temp_c": 2.079
+        },
+        {
+          "year": 2048,
+          "emissions_gtco2e": 35.53,
+          "temp_c": 2.089
+        },
+        {
+          "year": 2049,
+          "emissions_gtco2e": 35.15,
+          "temp_c": 2.098
+        },
+        {
+          "year": 2050,
+          "emissions_gtco2e": 34.78,
+          "temp_c": 2.107
+        },
+        {
+          "year": 2051,
+          "emissions_gtco2e": 34.42,
+          "temp_c": 2.116
+        },
+        {
+          "year": 2052,
+          "emissions_gtco2e": 34.06,
+          "temp_c": 2.125
+        },
+        {
+          "year": 2053,
+          "emissions_gtco2e": 33.71,
+          "temp_c": 2.133
+        },
+        {
+          "year": 2054,
+          "emissions_gtco2e": 33.36,
+          "temp_c": 2.142
+        },
+        {
+          "year": 2055,
+          "emissions_gtco2e": 33.02,
+          "temp_c": 2.151
+        },
+        {
+          "year": 2056,
+          "emissions_gtco2e": 32.69,
+          "temp_c": 2.159
+        },
+        {
+          "year": 2057,
+          "emissions_gtco2e": 32.36,
+          "temp_c": 2.167
+        },
+        {
+          "year": 2058,
+          "emissions_gtco2e": 32.04,
+          "temp_c": 2.175
+        },
+        {
+          "year": 2059,
+          "emissions_gtco2e": 31.72,
+          "temp_c": 2.184
+        },
+        {
+          "year": 2060,
+          "emissions_gtco2e": 31.4,
+          "temp_c": 2.192
+        },
+        {
+          "year": 2061,
+          "emissions_gtco2e": 31.09,
+          "temp_c": 2.199
+        },
+        {
+          "year": 2062,
+          "emissions_gtco2e": 30.78,
+          "temp_c": 2.207
+        },
+        {
+          "year": 2063,
+          "emissions_gtco2e": 30.47,
+          "temp_c": 2.215
+        },
+        {
+          "year": 2064,
+          "emissions_gtco2e": 30.17,
+          "temp_c": 2.222
+        },
+        {
+          "year": 2065,
+          "emissions_gtco2e": 29.87,
+          "temp_c": 2.23
+        },
+        {
+          "year": 2066,
+          "emissions_gtco2e": 29.58,
+          "temp_c": 2.237
+        },
+        {
+          "year": 2067,
+          "emissions_gtco2e": 29.29,
+          "temp_c": 2.244
+        },
+        {
+          "year": 2068,
+          "emissions_gtco2e": 29.01,
+          "temp_c": 2.252
+        },
+        {
+          "year": 2069,
+          "emissions_gtco2e": 28.72,
+          "temp_c": 2.259
+        },
+        {
+          "year": 2070,
+          "emissions_gtco2e": 28.45,
+          "temp_c": 2.266
+        },
+        {
+          "year": 2071,
+          "emissions_gtco2e": 28.17,
+          "temp_c": 2.272
+        },
+        {
+          "year": 2072,
+          "emissions_gtco2e": 27.9,
+          "temp_c": 2.279
+        },
+        {
+          "year": 2073,
+          "emissions_gtco2e": 27.64,
+          "temp_c": 2.286
+        },
+        {
+          "year": 2074,
+          "emissions_gtco2e": 27.38,
+          "temp_c": 2.293
+        },
+        {
+          "year": 2075,
+          "emissions_gtco2e": 27.12,
+          "temp_c": 2.299
+        },
+        {
+          "year": 2076,
+          "emissions_gtco2e": 26.88,
+          "temp_c": 2.306
+        },
+        {
+          "year": 2077,
+          "emissions_gtco2e": 26.63,
+          "temp_c": 2.312
+        },
+        {
+          "year": 2078,
+          "emissions_gtco2e": 26.4,
+          "temp_c": 2.318
+        },
+        {
+          "year": 2079,
+          "emissions_gtco2e": 26.17,
+          "temp_c": 2.324
+        },
+        {
+          "year": 2080,
+          "emissions_gtco2e": 25.94,
+          "temp_c": 2.33
+        },
+        {
+          "year": 2081,
+          "emissions_gtco2e": 25.73,
+          "temp_c": 2.337
+        },
+        {
+          "year": 2082,
+          "emissions_gtco2e": 25.51,
+          "temp_c": 2.343
+        },
+        {
+          "year": 2083,
+          "emissions_gtco2e": 25.3,
+          "temp_c": 2.348
+        },
+        {
+          "year": 2084,
+          "emissions_gtco2e": 25.1,
+          "temp_c": 2.354
+        },
+        {
+          "year": 2085,
+          "emissions_gtco2e": 24.9,
+          "temp_c": 2.36
+        },
+        {
+          "year": 2086,
+          "emissions_gtco2e": 24.71,
+          "temp_c": 2.366
+        },
+        {
+          "year": 2087,
+          "emissions_gtco2e": 24.52,
+          "temp_c": 2.371
+        },
+        {
+          "year": 2088,
+          "emissions_gtco2e": 24.34,
+          "temp_c": 2.377
+        },
+        {
+          "year": 2089,
+          "emissions_gtco2e": 24.16,
+          "temp_c": 2.383
+        },
+        {
+          "year": 2090,
+          "emissions_gtco2e": 23.99,
+          "temp_c": 2.388
+        },
+        {
+          "year": 2091,
+          "emissions_gtco2e": 23.82,
+          "temp_c": 2.393
+        },
+        {
+          "year": 2092,
+          "emissions_gtco2e": 23.66,
+          "temp_c": 2.399
+        },
+        {
+          "year": 2093,
+          "emissions_gtco2e": 23.5,
+          "temp_c": 2.404
+        },
+        {
+          "year": 2094,
+          "emissions_gtco2e": 23.34,
+          "temp_c": 2.409
+        },
+        {
+          "year": 2095,
+          "emissions_gtco2e": 23.19,
+          "temp_c": 2.414
+        },
+        {
+          "year": 2096,
+          "emissions_gtco2e": 23.04,
+          "temp_c": 2.42
+        },
+        {
+          "year": 2097,
+          "emissions_gtco2e": 22.89,
+          "temp_c": 2.425
+        },
+        {
+          "year": 2098,
+          "emissions_gtco2e": 22.75,
+          "temp_c": 2.43
+        },
+        {
+          "year": 2099,
+          "emissions_gtco2e": 22.61,
+          "temp_c": 2.435
+        },
+        {
+          "year": 2100,
+          "emissions_gtco2e": 22.48,
+          "temp_c": 2.44
+        }
+      ],
+      "sector_breakdown": {
+        "electricity": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 9.22
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 9.25
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 9.15
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 8.91
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 8.54
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 8.05
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 7.48
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 6.84
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 6.16
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 5.47
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 4.78
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 4.15
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 3.59
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 3.08
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 2.63
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 2.24
+          }
+        ],
+        "road_transport": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 6.04
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 5.06
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 3.41
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 2.13
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.75
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 1.74
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 1.78
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 1.82
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 1.85
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 1.87
+          }
+        ],
+        "aviation": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 1.41
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 1.56
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 1.61
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 1.51
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.29
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 1.09
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.98
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.94
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.92
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.91
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.9
+          }
+        ],
+        "shipping": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 0.79
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 0.77
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 0.74
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 0.67
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 0.59
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 0.51
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.46
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.43
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.42
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.41
+          }
+        ],
+        "industry": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 10.26
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 9.89
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 9.44
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 8.91
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 8.34
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 7.74
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 7.16
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 6.62
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 6.16
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 5.77
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 5.46
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 5.22
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 5.04
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 4.9
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 4.81
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 4.73
+          }
+        ],
+        "buildings": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 2.82
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 2.45
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 1.98
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 1.51
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.14
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 0.91
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.79
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.72
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.69
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.67
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.67
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.66
+          }
+        ],
+        "agriculture": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 11.94
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 11.64
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 11.36
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 11.08
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 10.8
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 10.53
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 10.27
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 10.02
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 9.77
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 9.53
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 9.29
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 9.06
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 8.84
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 8.62
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 8.41
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 8.2
+          }
+        ],
+        "other": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 4.89
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 4.77
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 4.59
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 4.41
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 4.3
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 4.2
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 4.11
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 4.01
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 3.91
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 3.82
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 3.74
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 3.66
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 3.6
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 3.54
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 3.5
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 3.46
+          }
+        ]
+      }
+    },
+    "scurve_slow": {
+      "peak_temp_c": 2.48,
+      "peak_year": 2100,
+      "temp_2050": 2.1,
+      "temp_2100": 2.48,
+      "emissions_2050": 36.0,
+      "net_zero_year": null,
+      "trajectory": [
+        {
+          "year": 2024,
+          "emissions_gtco2e": 45.69,
+          "temp_c": 1.815
+        },
+        {
+          "year": 2025,
+          "emissions_gtco2e": 45.52,
+          "temp_c": 1.828
+        },
+        {
+          "year": 2026,
+          "emissions_gtco2e": 45.31,
+          "temp_c": 1.841
+        },
+        {
+          "year": 2027,
+          "emissions_gtco2e": 45.05,
+          "temp_c": 1.853
+        },
+        {
+          "year": 2028,
+          "emissions_gtco2e": 44.74,
+          "temp_c": 1.866
+        },
+        {
+          "year": 2029,
+          "emissions_gtco2e": 44.39,
+          "temp_c": 1.878
+        },
+        {
+          "year": 2030,
+          "emissions_gtco2e": 44.0,
+          "temp_c": 1.89
+        },
+        {
+          "year": 2031,
+          "emissions_gtco2e": 43.58,
+          "temp_c": 1.902
+        },
+        {
+          "year": 2032,
+          "emissions_gtco2e": 43.13,
+          "temp_c": 1.914
+        },
+        {
+          "year": 2033,
+          "emissions_gtco2e": 42.65,
+          "temp_c": 1.926
+        },
+        {
+          "year": 2034,
+          "emissions_gtco2e": 42.17,
+          "temp_c": 1.938
+        },
+        {
+          "year": 2035,
+          "emissions_gtco2e": 41.67,
+          "temp_c": 1.949
+        },
+        {
+          "year": 2036,
+          "emissions_gtco2e": 41.18,
+          "temp_c": 1.96
+        },
+        {
+          "year": 2037,
+          "emissions_gtco2e": 40.69,
+          "temp_c": 1.972
+        },
+        {
+          "year": 2038,
+          "emissions_gtco2e": 40.22,
+          "temp_c": 1.983
+        },
+        {
+          "year": 2039,
+          "emissions_gtco2e": 39.76,
+          "temp_c": 1.993
+        },
+        {
+          "year": 2040,
+          "emissions_gtco2e": 39.33,
+          "temp_c": 2.004
+        },
+        {
+          "year": 2041,
+          "emissions_gtco2e": 38.91,
+          "temp_c": 2.014
+        },
+        {
+          "year": 2042,
+          "emissions_gtco2e": 38.52,
+          "temp_c": 2.025
+        },
+        {
+          "year": 2043,
+          "emissions_gtco2e": 38.16,
+          "temp_c": 2.035
+        },
+        {
+          "year": 2044,
+          "emissions_gtco2e": 37.81,
+          "temp_c": 2.045
+        },
+        {
+          "year": 2045,
+          "emissions_gtco2e": 37.48,
+          "temp_c": 2.055
+        },
+        {
+          "year": 2046,
+          "emissions_gtco2e": 37.16,
+          "temp_c": 2.065
+        },
+        {
+          "year": 2047,
+          "emissions_gtco2e": 36.86,
+          "temp_c": 2.075
+        },
+        {
+          "year": 2048,
+          "emissions_gtco2e": 36.56,
+          "temp_c": 2.085
+        },
+        {
+          "year": 2049,
+          "emissions_gtco2e": 36.28,
+          "temp_c": 2.094
+        },
+        {
+          "year": 2050,
+          "emissions_gtco2e": 36.0,
+          "temp_c": 2.104
+        },
+        {
+          "year": 2051,
+          "emissions_gtco2e": 35.73,
+          "temp_c": 2.113
+        },
+        {
+          "year": 2052,
+          "emissions_gtco2e": 35.46,
+          "temp_c": 2.123
+        },
+        {
+          "year": 2053,
+          "emissions_gtco2e": 35.2,
+          "temp_c": 2.132
+        },
+        {
+          "year": 2054,
+          "emissions_gtco2e": 34.94,
+          "temp_c": 2.141
+        },
+        {
+          "year": 2055,
+          "emissions_gtco2e": 34.69,
+          "temp_c": 2.15
+        },
+        {
+          "year": 2056,
+          "emissions_gtco2e": 34.43,
+          "temp_c": 2.159
+        },
+        {
+          "year": 2057,
+          "emissions_gtco2e": 34.18,
+          "temp_c": 2.168
+        },
+        {
+          "year": 2058,
+          "emissions_gtco2e": 33.94,
+          "temp_c": 2.177
+        },
+        {
+          "year": 2059,
+          "emissions_gtco2e": 33.69,
+          "temp_c": 2.185
+        },
+        {
+          "year": 2060,
+          "emissions_gtco2e": 33.45,
+          "temp_c": 2.194
+        },
+        {
+          "year": 2061,
+          "emissions_gtco2e": 33.2,
+          "temp_c": 2.203
+        },
+        {
+          "year": 2062,
+          "emissions_gtco2e": 32.96,
+          "temp_c": 2.211
+        },
+        {
+          "year": 2063,
+          "emissions_gtco2e": 32.72,
+          "temp_c": 2.22
+        },
+        {
+          "year": 2064,
+          "emissions_gtco2e": 32.48,
+          "temp_c": 2.228
+        },
+        {
+          "year": 2065,
+          "emissions_gtco2e": 32.25,
+          "temp_c": 2.236
+        },
+        {
+          "year": 2066,
+          "emissions_gtco2e": 32.01,
+          "temp_c": 2.244
+        },
+        {
+          "year": 2067,
+          "emissions_gtco2e": 31.78,
+          "temp_c": 2.252
+        },
+        {
+          "year": 2068,
+          "emissions_gtco2e": 31.54,
+          "temp_c": 2.26
+        },
+        {
+          "year": 2069,
+          "emissions_gtco2e": 31.31,
+          "temp_c": 2.268
+        },
+        {
+          "year": 2070,
+          "emissions_gtco2e": 31.08,
+          "temp_c": 2.276
+        },
+        {
+          "year": 2071,
+          "emissions_gtco2e": 30.85,
+          "temp_c": 2.284
+        },
+        {
+          "year": 2072,
+          "emissions_gtco2e": 30.62,
+          "temp_c": 2.292
+        },
+        {
+          "year": 2073,
+          "emissions_gtco2e": 30.4,
+          "temp_c": 2.299
+        },
+        {
+          "year": 2074,
+          "emissions_gtco2e": 30.17,
+          "temp_c": 2.307
+        },
+        {
+          "year": 2075,
+          "emissions_gtco2e": 29.95,
+          "temp_c": 2.314
+        },
+        {
+          "year": 2076,
+          "emissions_gtco2e": 29.73,
+          "temp_c": 2.322
+        },
+        {
+          "year": 2077,
+          "emissions_gtco2e": 29.52,
+          "temp_c": 2.329
+        },
+        {
+          "year": 2078,
+          "emissions_gtco2e": 29.31,
+          "temp_c": 2.336
+        },
+        {
+          "year": 2079,
+          "emissions_gtco2e": 29.1,
+          "temp_c": 2.344
+        },
+        {
+          "year": 2080,
+          "emissions_gtco2e": 28.9,
+          "temp_c": 2.351
+        },
+        {
+          "year": 2081,
+          "emissions_gtco2e": 28.7,
+          "temp_c": 2.358
+        },
+        {
+          "year": 2082,
+          "emissions_gtco2e": 28.5,
+          "temp_c": 2.365
+        },
+        {
+          "year": 2083,
+          "emissions_gtco2e": 28.31,
+          "temp_c": 2.372
+        },
+        {
+          "year": 2084,
+          "emissions_gtco2e": 28.12,
+          "temp_c": 2.379
+        },
+        {
+          "year": 2085,
+          "emissions_gtco2e": 27.93,
+          "temp_c": 2.385
+        },
+        {
+          "year": 2086,
+          "emissions_gtco2e": 27.75,
+          "temp_c": 2.392
+        },
+        {
+          "year": 2087,
+          "emissions_gtco2e": 27.57,
+          "temp_c": 2.399
+        },
+        {
+          "year": 2088,
+          "emissions_gtco2e": 27.39,
+          "temp_c": 2.405
+        },
+        {
+          "year": 2089,
+          "emissions_gtco2e": 27.22,
+          "temp_c": 2.412
+        },
+        {
+          "year": 2090,
+          "emissions_gtco2e": 27.04,
+          "temp_c": 2.418
+        },
+        {
+          "year": 2091,
+          "emissions_gtco2e": 26.88,
+          "temp_c": 2.425
+        },
+        {
+          "year": 2092,
+          "emissions_gtco2e": 26.71,
+          "temp_c": 2.431
+        },
+        {
+          "year": 2093,
+          "emissions_gtco2e": 26.55,
+          "temp_c": 2.438
+        },
+        {
+          "year": 2094,
+          "emissions_gtco2e": 26.39,
+          "temp_c": 2.444
+        },
+        {
+          "year": 2095,
+          "emissions_gtco2e": 26.23,
+          "temp_c": 2.45
+        },
+        {
+          "year": 2096,
+          "emissions_gtco2e": 26.08,
+          "temp_c": 2.456
+        },
+        {
+          "year": 2097,
+          "emissions_gtco2e": 25.93,
+          "temp_c": 2.462
+        },
+        {
+          "year": 2098,
+          "emissions_gtco2e": 25.78,
+          "temp_c": 2.468
+        },
+        {
+          "year": 2099,
+          "emissions_gtco2e": 25.63,
+          "temp_c": 2.474
+        },
+        {
+          "year": 2100,
+          "emissions_gtco2e": 25.49,
+          "temp_c": 2.48
+        }
+      ],
+      "sector_breakdown": {
+        "electricity": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 8.56
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 8.71
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 8.77
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 8.72
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 8.58
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 8.34
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 8.02
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 7.62
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 7.16
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 6.65
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 6.11
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 5.59
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 5.09
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 4.62
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 4.19
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 3.78
+          }
+        ],
+        "road_transport": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 5.78
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 4.93
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 3.58
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 2.45
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.93
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 1.8
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 1.8
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 1.83
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 1.85
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 1.87
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 1.87
+          }
+        ],
+        "aviation": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 1.36
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 1.48
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 1.52
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 1.47
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.35
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 1.21
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 1.09
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 1.01
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.96
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.93
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.92
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.91
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.9
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.9
+          }
+        ],
+        "shipping": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 0.77
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 0.74
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 0.7
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 0.65
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 0.59
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 0.53
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.49
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.45
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.43
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.42
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.42
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.41
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.41
+          }
+        ],
+        "industry": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 9.73
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 9.4
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 9.03
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 8.64
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 8.23
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 7.81
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 7.4
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 7.0
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 6.63
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 6.3
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 6.0
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 5.74
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 5.52
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 5.33
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 5.18
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 5.06
+          }
+        ],
+        "buildings": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 2.62
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 2.32
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 1.98
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 1.64
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 1.34
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 1.11
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 0.95
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 0.84
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 0.77
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 0.73
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 0.7
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 0.68
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 0.67
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 0.67
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 0.66
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 0.66
+          }
+        ],
+        "agriculture": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 11.96
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 11.75
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 11.55
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 11.35
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 11.15
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 10.95
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 10.76
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 10.58
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 10.39
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 10.21
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 10.04
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 9.86
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 9.69
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 9.52
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 9.36
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 9.19
+          }
+        ],
+        "other": [
+          {
+            "year": 2025,
+            "emissions_gtco2e": 4.76
+          },
+          {
+            "year": 2030,
+            "emissions_gtco2e": 4.67
+          },
+          {
+            "year": 2035,
+            "emissions_gtco2e": 4.53
+          },
+          {
+            "year": 2040,
+            "emissions_gtco2e": 4.4
+          },
+          {
+            "year": 2045,
+            "emissions_gtco2e": 4.31
+          },
+          {
+            "year": 2050,
+            "emissions_gtco2e": 4.24
+          },
+          {
+            "year": 2055,
+            "emissions_gtco2e": 4.18
+          },
+          {
+            "year": 2060,
+            "emissions_gtco2e": 4.11
+          },
+          {
+            "year": 2065,
+            "emissions_gtco2e": 4.04
+          },
+          {
+            "year": 2070,
+            "emissions_gtco2e": 3.97
+          },
+          {
+            "year": 2075,
+            "emissions_gtco2e": 3.9
+          },
+          {
+            "year": 2080,
+            "emissions_gtco2e": 3.83
+          },
+          {
+            "year": 2085,
+            "emissions_gtco2e": 3.77
+          },
+          {
+            "year": 2090,
+            "emissions_gtco2e": 3.71
+          },
+          {
+            "year": 2095,
+            "emissions_gtco2e": 3.66
+          },
+          {
+            "year": 2100,
+            "emissions_gtco2e": 3.62
+          }
+        ]
+      }
+    },
+    "current_policies": {
+      "description": "UNEP 2024 Emissions Gap Report \u2014 assumes current implemented policies continue",
+      "temp_2100": 3.1,
+      "source": "UNEP Emissions Gap Report 2024"
+    }
+  },
+  "sources": [
+    "IPCC AR6 WG1 Ch. 5 (TCRE)",
+    "IPCC AR6 WG3 Ch. 2 (sector emissions)",
+    "UNEP Emissions Gap Report 2024 (current policies)",
+    "IEA World Energy Outlook 2025",
+    "S-curve parameters fitted from OWID/IEA data"
+  ]
+}

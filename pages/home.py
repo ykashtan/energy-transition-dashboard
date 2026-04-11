@@ -908,6 +908,25 @@ def layout(**kwargs):
                     ),
                 ], md=10, lg=8),
             ]),
+
+            # What's New — collapsible changelog
+            dbc.Row([
+                dbc.Col([
+                    html.Details([
+                        html.Summary(
+                            html.Strong("What's New (April 2026)"),
+                            style={"cursor": "pointer", "fontSize": "0.9rem"},
+                        ),
+                        html.Ul([
+                            html.Li("Tipping Points expanded to 29 items across 11 sectors (aviation, shipping, steel, hydrogen, and more)"),
+                            html.Li("New Technology Trajectories page — S-curve analysis and scenario exploration"),
+                            html.Li("New Country Comparison tool — side-by-side metrics for 2-4 countries"),
+                            html.Li("Spotlight page restructured: 18 countries in 6 analytically grounded categories"),
+                            html.Li("CSV download buttons added across key charts"),
+                        ], className="small text-muted mb-0 mt-1"),
+                    ], className="changelog-card rounded p-2 mb-3"),
+                ], md=10, lg=8),
+            ]),
         ], fluid=False),
 
         # =====================================================================

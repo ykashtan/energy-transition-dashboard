@@ -1,0 +1,102 @@
+{
+  "_methodology": {
+    "framework": "Rogers Diffusion of Innovations + RMI S-curve inflection research",
+    "milestones": {
+      "5%": "S-curve inflection point — adoption accelerates (RMI Bond & Butler-Sloss 2022)",
+      "16%": "Early majority — technology crosses the 'chasm' (Rogers 1962, Moore 1991)",
+      "50%": "Majority — dominant technology in the market"
+    },
+    "rule": "Each technology is tracked to its NEXT milestone. Pre-5% techs target 5%; post-5% target 16%; post-16% target 50%."
+  },
+  "aviation_saf": {
+    "name": "Sustainable Aviation Fuel",
+    "sector": "aviation",
+    "current_share_pct": 0.3,
+    "current_year": 2025,
+    "next_milestone_pct": 5.0,
+    "next_milestone_label": "Inflection (5%)",
+    "source": "IATA SAF Production Data 2025",
+    "source_url": "https://www.iata.org/en/programs/environment/sustainable-aviation-fuels/",
+    "assessment_date": "2026-04",
+    "confidence": "medium",
+    "methodology_note": "SAF as percentage of total jet fuel consumption globally. Pre-inflection: 0.3% is 94% below the 5% takeoff threshold."
+  },
+  "shipping_alt_fuels": {
+    "name": "Alternative Shipping Fuels",
+    "sector": "shipping",
+    "current_share_pct": 0.1,
+    "current_year": 2025,
+    "next_milestone_pct": 5.0,
+    "next_milestone_label": "Inflection (5%)",
+    "source": "Global Maritime Forum 2025",
+    "source_url": "https://globalmaritimeforum.org/",
+    "assessment_date": "2026-04",
+    "confidence": "low",
+    "methodology_note": "Alternative fuels (methanol, ammonia) as share of total shipping fuel by energy content. Pre-inflection: 0.1% is far from the 5% takeoff threshold."
+  },
+  "green_hydrogen": {
+    "name": "Green Hydrogen",
+    "sector": "industry",
+    "current_share_pct": 4.0,
+    "current_year": 2025,
+    "next_milestone_pct": 5.0,
+    "next_milestone_label": "Inflection (5%)",
+    "source": "IEA Global Hydrogen Review 2025",
+    "source_url": "https://www.iea.org/reports/global-hydrogen-review",
+    "assessment_date": "2026-04",
+    "confidence": "medium",
+    "methodology_note": "Green/low-carbon H2 as share of total hydrogen production. Approaching the 5% inflection point. Cost: ~$4-6/kg vs grey $1-2/kg."
+  },
+  "green_steel": {
+    "name": "Green Steel (Electric Arc Furnace)",
+    "sector": "industry",
+    "current_share_pct": 28.0,
+    "current_year": 2024,
+    "next_milestone_pct": 50.0,
+    "next_milestone_label": "Majority (50%)",
+    "source": "World Steel Association 2025",
+    "source_url": "https://worldsteel.org/",
+    "assessment_date": "2026-04",
+    "confidence": "high",
+    "methodology_note": "EAF share of global crude steel production. Past inflection (5%) and early majority (16%); next milestone is majority production at 50%."
+  },
+  "electric_trucks": {
+    "name": "Electric Trucks",
+    "sector": "transport",
+    "current_share_pct": 0.8,
+    "current_year": 2024,
+    "next_milestone_pct": 5.0,
+    "next_milestone_label": "Inflection (5%)",
+    "source": "IEA Global EV Outlook 2025",
+    "source_url": "https://www.iea.org/reports/global-ev-outlook-2025",
+    "assessment_date": "2026-04",
+    "confidence": "high",
+    "methodology_note": "Electric truck sales as share of total new truck sales globally. Pre-inflection; following passenger EV cost declines with ~3-5 year lag."
+  },
+  "heat_pumps_global": {
+    "name": "Heat Pumps (Global Heating Share)",
+    "sector": "buildings",
+    "current_share_pct": 10.0,
+    "current_year": 2024,
+    "next_milestone_pct": 16.0,
+    "next_milestone_label": "Early majority (16%)",
+    "source": "IEA Heat Pump Market Report 2025",
+    "source_url": "https://www.iea.org/energy-system/buildings/heat-pumps",
+    "assessment_date": "2026-04",
+    "confidence": "medium",
+    "methodology_note": "Heat pumps as share of global heating equipment sales. Past the 5% inflection; next milestone is 16% early majority (crossing the chasm). Nordics already at 90%+."
+  },
+  "induction_cooking": {
+    "name": "Induction Cooking",
+    "sector": "buildings",
+    "current_share_pct": 5.0,
+    "current_year": 2024,
+    "next_milestone_pct": 16.0,
+    "next_milestone_label": "Early majority (16%)",
+    "source": "IEA Energy Efficiency 2025",
+    "source_url": "https://www.iea.org/topics/energy-efficiency",
+    "assessment_date": "2026-04",
+    "confidence": "low",
+    "methodology_note": "Induction hobs as share of global cooking appliance sales. At the 5% inflection point; next milestone is 16% early majority. Already dominant in parts of Asia."
+  }
+}

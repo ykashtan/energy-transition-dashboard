@@ -1,0 +1,28 @@
+{
+  "ev_sales_share_global": {
+    "metric": "Global EV sales share (%)",
+    "forecasts": [
+      {"organization": "IEA", "report": "Global EV Outlook 2025 (STEPS)", "year_published": 2025, "target_year": 2030, "value_low": 35, "value_central": 40, "value_high": 50, "source_url": "https://www.iea.org/reports/global-ev-outlook-2025", "access_date": "2026-04"},
+      {"organization": "RMI", "report": "X-Change: Cars 2024", "year_published": 2024, "target_year": 2030, "value_low": 50, "value_central": 62, "value_high": 75, "source_url": "https://rmi.org/insight/x-change-cars/", "access_date": "2026-04"},
+      {"organization": "BloombergNEF", "report": "EV Outlook 2025", "year_published": 2025, "target_year": 2030, "value_low": 40, "value_central": 50, "value_high": 60, "source_url": "https://about.bnef.com/electric-vehicle-outlook/", "access_date": "2026-04"},
+      {"organization": "RethinkX", "report": "Clean Disruption", "year_published": 2024, "target_year": 2030, "value_low": 70, "value_central": 80, "value_high": 95, "source_url": "https://www.rethinkx.com/clean-disruption", "access_date": "2026-04"}
+    ]
+  },
+  "solar_share_electricity": {
+    "metric": "Solar share of global electricity (%)",
+    "forecasts": [
+      {"organization": "IEA", "report": "World Energy Outlook 2025 (STEPS)", "year_published": 2025, "target_year": 2030, "value_low": 12, "value_central": 15, "value_high": 18, "source_url": "https://www.iea.org/reports/world-energy-outlook-2025", "access_date": "2026-04"},
+      {"organization": "RMI", "report": "X-Change: Electricity 2024", "year_published": 2024, "target_year": 2030, "value_low": 18, "value_central": 22, "value_high": 28, "source_url": "https://rmi.org/insight/x-change-electricity/", "access_date": "2026-04"},
+      {"organization": "BloombergNEF", "report": "New Energy Outlook 2025", "year_published": 2025, "target_year": 2030, "value_low": 14, "value_central": 18, "value_high": 22, "source_url": "https://about.bnef.com/new-energy-outlook/", "access_date": "2026-04"},
+      {"organization": "RethinkX", "report": "Rethinking Energy 2020-2030", "year_published": 2024, "target_year": 2030, "value_low": 25, "value_central": 33, "value_high": 40, "source_url": "https://www.rethinkx.com/energy", "access_date": "2026-04"}
+    ]
+  },
+  "renewable_share_electricity": {
+    "metric": "Renewables share of global electricity (%)",
+    "forecasts": [
+      {"organization": "IEA", "report": "World Energy Outlook 2025 (STEPS)", "year_published": 2025, "target_year": 2030, "value_low": 38, "value_central": 42, "value_high": 48, "source_url": "https://www.iea.org/reports/world-energy-outlook-2025", "access_date": "2026-04"},
+      {"organization": "RMI", "report": "X-Change: Electricity 2024", "year_published": 2024, "target_year": 2030, "value_low": 45, "value_central": 52, "value_high": 60, "source_url": "https://rmi.org/insight/x-change-electricity/", "access_date": "2026-04"},
+      {"organization": "IRENA", "report": "World Energy Transitions Outlook 2024", "year_published": 2024, "target_year": 2030, "value_low": 50, "value_central": 55, "value_high": 60, "source_url": "https://www.irena.org/Publications/2024/Sep/Renewable-Energy-Statistics-2024", "access_date": "2026-04"}
+    ]
+  }
+}

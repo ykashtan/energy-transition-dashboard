@@ -53,6 +53,8 @@ navbar = dbc.NavbarSimple(
         dbc.NavItem(dbc.NavLink("Home", href="/")),
         dbc.NavItem(dbc.NavLink("Spotlights", href="/spotlight")),
         dbc.NavItem(dbc.NavLink("Tipping Points", href="/tipping-points")),
+        dbc.NavItem(dbc.NavLink("Trajectories", href="/trajectories")),
+        dbc.NavItem(dbc.NavLink("Compare", href="/compare")),
         dbc.NavItem(dbc.NavLink("Methodology", href="/methodology")),
     ],
     brand="Energy Transition Dashboard",
@@ -330,6 +332,76 @@ app.callback(
     dash.Input("country-tabs", "active_tab"),
     dash.Input("country-iso3-store", "data"),
 )(build_tab_content)
+
+
+# ---------------------------------------------------------------------------
+# Technology Trajectories page: scenario explorer callback
+# ---------------------------------------------------------------------------
+# Wired in Phase 2 — trajectory_scenario_figure callback goes here
+
+try:
+    from pages.trajectories import update_trajectory_figure
+    app.callback(
+        dash.Output("trajectory-scenario-figure", "figure"),
+        dash.Input("trajectory-tech-selector", "value"),
+        prevent_initial_call=True,
+    )(update_trajectory_figure)
+except (ImportError, Exception):
+    pass  # Page not yet built — skip
+
+
+# ---------------------------------------------------------------------------
+# Country Comparison page: update comparison callback
+# ---------------------------------------------------------------------------
+# Wired in Phase 2 — comparison callback goes here
+
+try:
+    from pages.compare import update_comparison
+    app.callback(
+        dash.Output("compare-content", "children"),
+        [dash.Input(f"compare-country-{i}", "value") for i in range(4)],
+        prevent_initial_call=True,
+    )(update_comparison)
+except (ImportError, Exception):
+    pass  # Page not yet built — skip
+
+
+# ---------------------------------------------------------------------------
+# Download CSV: pattern-matching callback for all download buttons
+# ---------------------------------------------------------------------------
+
+try:
+    from components.download_button import csv_with_header
+    from utils.data_loader import (
+        get_emissions, get_energy_mix, get_capacity, get_health,
+        get_investment, get_vulnerability,
+    )
+
+    _DOWNLOAD_REGISTRY = {
+        "emissions": ("emissions", get_emissions, "Global Carbon Budget / OWID", "CC-BY 4.0"),
+        "energy_mix": ("energy_mix", get_energy_mix, "Our World in Data", "CC-BY 4.0"),
+        "capacity": ("capacity", get_capacity, "IRENA / OWID", "CC-BY 4.0"),
+        "health": ("health", get_health, "IHME GBD 2023", "CC-BY 4.0"),
+        "investment": ("investment", get_investment, "IEA World Energy Investment 2025", "See IEA for terms"),
+        "vulnerability": ("vulnerability", get_vulnerability, "ND-GAIN", "CC-BY 4.0"),
+    }
+
+    @app.callback(
+        dash.Output({"type": "download-csv", "index": dash.MATCH}, "data"),
+        dash.Input({"type": "download-btn", "index": dash.MATCH}, "n_clicks"),
+        dash.State({"type": "download-data-key", "index": dash.MATCH}, "data"),
+        prevent_initial_call=True,
+    )
+    def download_csv(n_clicks, data_key):
+        if not n_clicks or data_key not in _DOWNLOAD_REGISTRY:
+            return dash.no_update
+        name, getter, source, license_info = _DOWNLOAD_REGISTRY[data_key]
+        df = getter()
+        if df.empty:
+            return dash.no_update
+        return csv_with_header(df, f"{name}.csv", source, license_info)
+except (ImportError, Exception):
+    pass
 
 
 # ---------------------------------------------------------------------------

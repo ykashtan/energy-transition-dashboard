@@ -1,0 +1,101 @@
+{
+  "ev_share_Norway": {
+    "K": 98.74,
+    "r": 0.4945,
+    "t0": 2017.9,
+    "r_squared": 0.9936,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_China": {
+    "K": 80.0,
+    "r": 0.6251,
+    "t0": 2023.2,
+    "r_squared": 0.9897,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_World": {
+    "K": 80.0,
+    "r": 0.4082,
+    "t0": 2026.2,
+    "r_squared": 0.9805,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_USA": {
+    "K": 80.0,
+    "r": 0.3084,
+    "t0": 2030.0,
+    "r_squared": 0.9657,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_Germany": {
+    "K": 70.0,
+    "r": 0.316,
+    "t0": 2025.0,
+    "r_squared": 0.7454,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_Sweden": {
+    "K": 70.0,
+    "r": 0.7509,
+    "t0": 2020.5,
+    "r_squared": 0.9855,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_France": {
+    "K": 70.0,
+    "r": 0.3706,
+    "t0": 2025.0,
+    "r_squared": 0.9342,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "ev_share_United_Kingdom": {
+    "K": 70.0,
+    "r": 0.3864,
+    "t0": 2024.6,
+    "r_squared": 0.9468,
+    "n_points": 15,
+    "year_start": 2010,
+    "year_end": 2024
+  },
+  "solar_share_global": {
+    "K": 40.0,
+    "r": 0.2315,
+    "t0": 2030.7,
+    "r_squared": 0.997,
+    "n_points": 25,
+    "year_start": 2000,
+    "year_end": 2024
+  },
+  "wind_share_global": {
+    "K": 30.0,
+    "r": 0.1382,
+    "t0": 2030.3,
+    "r_squared": 0.9922,
+    "n_points": 25,
+    "year_start": 2000,
+    "year_end": 2024
+  },
+  "renewable_share_global": {
+    "K": 100.0,
+    "r": 0.0366,
+    "t0": 2044.1,
+    "r_squared": 0.9468,
+    "n_points": 25,
+    "year_start": 2000,
+    "year_end": 2024
+  }
+}

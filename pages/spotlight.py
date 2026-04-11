@@ -2,7 +2,7 @@
 spotlight.py — Country Spotlights page for the Energy Transition Dashboard.
 
 Showcases 18 compelling energy transition stories from around the world,
-organized by narrative theme. Each country card shows a headline takeaway,
+organized by 6 narrative themes. Each country card shows a headline takeaway,
 key metrics from existing data, and links to the full country detail page.
 
 Content is hardcoded from research/country_spotlight_synthesis.md rather than
@@ -34,13 +34,13 @@ dash.register_page(
 _GRAPH_CONFIG = {"responsive": True, "displayModeBar": False, "displaylogo": False}
 
 # ---------------------------------------------------------------------------
-# Flag emoji lookup (ISO2 letter offsets → regional indicator symbols)
+# Flag emoji lookup (ISO2 letter offsets -> regional indicator symbols)
 # ---------------------------------------------------------------------------
 _ISO3_TO_ISO2 = {
     "KEN": "KE", "NGA": "NG", "PAK": "PK", "ZAF": "ZA", "URY": "UY",
     "DNK": "DK", "USA": "US", "VNM": "VN", "CHN": "CN", "IND": "IN",
     "DEU": "DE", "SAU": "SA", "IDN": "ID", "CHL": "CL", "AUS": "AU",
-    "BGD": "BD", "MAR": "MA", "POL": "PL",
+    "POL": "PL", "ETH": "ET", "CRI": "CR", "COL": "CO",
 }
 
 def _flag(iso3: str) -> str:
@@ -52,12 +52,36 @@ def _flag(iso3: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Spotlight data: 18 countries organized by narrative theme
+# Spotlight data: 18 countries organized by 6 narrative themes
 # ---------------------------------------------------------------------------
 
 THEMES = [
     {
-        "name": "Leapfrog Stories",
+        "name": "Electrostates",
+        "subtitle": "Scale that reshapes global markets",
+        "color": "#e65100",
+        "icon": "bi-graph-up-arrow",
+        "countries": [
+            {
+                "iso3": "CHN",
+                "name": "China",
+                "headline": "Installed 210 GW of solar in H1 2025 alone — more than the entire US has "
+                            "ever installed. Clean energy now equals 11.4% of GDP and drove over a third "
+                            "of economic growth. Yet China simultaneously added record coal capacity.",
+                "metrics": ["solar_capacity", "emissions_total", "renewable_share"],
+            },
+            {
+                "iso3": "IND",
+                "name": "India",
+                "headline": "Non-fossil capacity crossed 50% in June 2025, five years ahead of target. "
+                            "Coal power fell for the first time outside COVID, and emissions growth hit a "
+                            "20-year low. The race between clean supply and surging demand defines the global trajectory.",
+                "metrics": ["solar_capacity", "renewable_share", "emissions_total"],
+            },
+        ],
+    },
+    {
+        "name": "Leapfroggers",
         "subtitle": "Building new systems, not converting old ones",
         "color": "#2e7d32",
         "icon": "bi-rocket-takeoff",
@@ -78,22 +102,30 @@ THEMES = [
                             "the rational economic choice for Africa's largest population.",
                 "metrics": ["renewable_share", "co2_per_capita", "emissions_total"],
             },
-        ],
-    },
-    {
-        "name": "Crisis-Driven Transitions",
-        "subtitle": "Failure and disaster as accelerants",
-        "color": "#c62828",
-        "icon": "bi-lightning-charge",
-        "countries": [
             {
                 "iso3": "PAK",
                 "name": "Pakistan",
-                "headline": "Satellite imagery revealed 22–32 GW of distributed solar — 2–3x what "
+                "headline": "Satellite imagery revealed 22-32 GW of distributed solar — 2-3x what "
                             "officials tracked. Solar went from 4% to ~24% of generation in 3 years, "
                             "driven by an energy price crisis, not policy.",
                 "metrics": ["solar_capacity", "renewable_share", "emissions_total"],
             },
+            {
+                "iso3": "ETH",
+                "name": "Ethiopia",
+                "headline": "Africa's largest hydropower project (GERD, 5,150 MW) more than doubled "
+                            "national capacity — while the country banned gasoline vehicle imports "
+                            "entirely, the world's most aggressive vehicle electrification mandate.",
+                "metrics": ["renewable_share", "co2_per_capita", "emissions_total"],
+            },
+        ],
+    },
+    {
+        "name": "Crisis Catalysts",
+        "subtitle": "Failure and disruption as accelerants",
+        "color": "#c62828",
+        "icon": "bi-lightning-charge",
+        "countries": [
             {
                 "iso3": "ZAF",
                 "name": "South Africa",
@@ -102,10 +134,26 @@ THEMES = [
                             "still 82% coal-dependent with 90,000 mining jobs at stake.",
                 "metrics": ["coal_share", "solar_capacity", "co2_per_capita"],
             },
+            {
+                "iso3": "POL",
+                "name": "Poland",
+                "headline": "Coal's cultural heartland achieved a 1,000-fold solar growth in a decade "
+                            "via 1.5 million prosumer households. Renewables outproduced coal for the "
+                            "first time in June 2025 — a bottom-up revolution in politically hostile terrain.",
+                "metrics": ["renewable_share", "coal_share", "solar_capacity"],
+            },
+            {
+                "iso3": "CRI",
+                "name": "Costa Rica",
+                "headline": "Near-100% renewable electricity for over a decade — then the 2024 El Nino "
+                            "crashed it from 98% to 86%, revealing the climate vulnerability of "
+                            "hydro-dependent clean grids. Recovery to 98.6% in 2025 demonstrated system resilience.",
+                "metrics": ["renewable_share", "co2_per_capita", "emissions_total"],
+            },
         ],
     },
     {
-        "name": "Policy Laboratories",
+        "name": "Policy Architects",
         "subtitle": "Where institutional design made or broke the transition",
         "color": "#1565c0",
         "icon": "bi-bank2",
@@ -142,38 +190,6 @@ THEMES = [
                             "about deployment without policy continuity.",
                 "metrics": ["solar_capacity", "renewable_share", "coal_share"],
             },
-        ],
-    },
-    {
-        "name": "Scale Without Precedent",
-        "subtitle": "The sheer magnitude stories",
-        "color": "#e65100",
-        "icon": "bi-graph-up-arrow",
-        "countries": [
-            {
-                "iso3": "CHN",
-                "name": "China",
-                "headline": "Installed 210 GW of solar in H1 2025 alone — more than the entire US has "
-                            "ever installed. Clean energy now equals 11.4% of GDP and drove over a third "
-                            "of economic growth. Yet China simultaneously added record coal capacity.",
-                "metrics": ["solar_capacity", "emissions_total", "renewable_share"],
-            },
-            {
-                "iso3": "IND",
-                "name": "India",
-                "headline": "Non-fossil capacity crossed 50% in June 2025, five years ahead of target. "
-                            "Coal power fell for the first time outside COVID, and emissions growth hit a "
-                            "20-year low. The race between clean supply and surging demand defines the global trajectory.",
-                "metrics": ["solar_capacity", "renewable_share", "emissions_total"],
-            },
-        ],
-    },
-    {
-        "name": "Messy Transition Dilemmas",
-        "subtitle": "When multiple energy systems collide",
-        "color": "#6a1b9a",
-        "icon": "bi-signpost-split",
-        "countries": [
             {
                 "iso3": "DEU",
                 "name": "Germany",
@@ -183,6 +199,14 @@ THEMES = [
                             "managing a multi-front energy transition.",
                 "metrics": ["renewable_share", "emissions_total", "wind_capacity"],
             },
+        ],
+    },
+    {
+        "name": "Petrostate Paradoxes",
+        "subtitle": "Fossil wealth meets clean energy",
+        "color": "#37474f",
+        "icon": "bi-signpost-split",
+        "countries": [
             {
                 "iso3": "SAU",
                 "name": "Saudi Arabia",
@@ -190,6 +214,15 @@ THEMES = [
                             "largest green hydrogen plant is 90% complete. Yet renewables still provide "
                             "only ~2% of electricity and emissions keep rising.",
                 "metrics": ["solar_capacity", "renewable_share", "co2_per_capita"],
+            },
+            {
+                "iso3": "COL",
+                "name": "Colombia",
+                "headline": "The first major fossil fuel producer to suspend new oil/gas exploration "
+                            "licenses and endorse the Fossil Fuel Non-Proliferation Treaty — an "
+                            "unprecedented policy experiment in a country where 75% of electricity "
+                            "is already renewable.",
+                "metrics": ["renewable_share", "co2_per_capita", "emissions_trend"],
             },
             {
                 "iso3": "IDN",
@@ -223,57 +256,6 @@ THEMES = [
                             "in 2024. Grid-forming batteries (the 'Big Battery') proved that batteries can "
                             "provide grid stability — a world first with global implications.",
                 "metrics": ["renewable_share", "solar_capacity", "wind_capacity"],
-            },
-            {
-                "iso3": "DNK",
-                "name": "Denmark",
-                "duplicate": True,
-                "headline": "Electricity is solved at 88% renewable — but agriculture (25% of emissions) "
-                            "and heating are the new fronts. Denmark's story shows that solving electricity "
-                            "is the beginning, not the end, of the energy transition.",
-                "metrics": ["renewable_share", "emissions_trend", "wind_capacity"],
-            },
-        ],
-    },
-    {
-        "name": "The Green Squeeze",
-        "subtitle": "External pressure forcing transition",
-        "color": "#4e342e",
-        "icon": "bi-arrow-down-up",
-        "countries": [
-            {
-                "iso3": "BGD",
-                "name": "Bangladesh",
-                "headline": "270 LEED-certified green factories (68 of the world's top 100) sitting on "
-                            "a 95%+ fossil-fueled grid. LDC graduation, EU CBAM, and loss of trade "
-                            "preferences are converging into a unique 'green squeeze' by 2026–2030.",
-                "metrics": ["renewable_share", "emissions_total", "co2_per_capita"],
-            },
-        ],
-    },
-    {
-        "name": "Supply Chain Paradoxes",
-        "subtitle": "Clean energy's uncomfortable dependencies",
-        "color": "#37474f",
-        "icon": "bi-link-45deg",
-        "countries": [
-            {
-                "iso3": "IDN",
-                "name": "Indonesia",
-                "duplicate": True,
-                "headline": "Global demand for EV battery nickel is literally fueling Indonesia's coal boom. "
-                            "Off-grid captive coal plants tripled to 16.6 GW since 2019 — entirely outside "
-                            "the scope of the $21.4B JETP deal.",
-                "metrics": ["coal_share", "emissions_total", "renewable_share"],
-            },
-            {
-                "iso3": "CHL",
-                "name": "Chile",
-                "duplicate": True,
-                "headline": "Holds 24% of global copper and 41% of lithium reserves — the minerals that "
-                            "make the energy transition physically possible. The cheapest solar on Earth "
-                            "(Atacama, ~$20–29/MWh) powers the extraction, creating a mineral-energy nexus.",
-                "metrics": ["solar_capacity", "renewable_share", "emissions_trend"],
             },
         ],
     },
@@ -546,6 +528,50 @@ def _theme_section(theme: dict) -> html.Div:
 
 
 # ---------------------------------------------------------------------------
+# "Why These 18 Countries?" justification section
+# ---------------------------------------------------------------------------
+
+def _why_these_countries_section() -> dbc.Card:
+    """Build the analytical framework justification card."""
+    return dbc.Card([
+        dbc.CardHeader(
+            html.H4(
+                [html.I(className="bi-question-circle me-2"), "Why These 18 Countries?"],
+                className="fw-bold mb-0",
+                style={"color": "#37474f"},
+            ),
+            style={"backgroundColor": "#f8f9fa", "borderBottom": "2px solid #dee2e6"},
+        ),
+        dbc.CardBody([
+            html.P([
+                "These 18 countries are organized into six analytical archetypes — Electrostates, "
+                "Leapfroggers, Crisis Catalysts, Policy Architects, Petrostate Paradoxes, and "
+                "Success Creates New Challenges — rather than by geography or alphabetical order. "
+                "Each archetype captures a distinct mechanism by which the energy transition "
+                "advances (or stalls), drawn from the WEF Energy Transition Index classification "
+                "system, the Carnegie Endowment's 'electrostate' concept, and the broader "
+                "literature on crisis-driven versus policy-led transitions.",
+            ], className="mb-3", style={"lineHeight": "1.7", "color": "#495057"}),
+            html.P([
+                "Selection criteria prioritized countries that are narratively distinctive, "
+                "data-rich within our dashboard's sources (OWID, IRENA, Ember), and globally "
+                "representative across income levels, regions, and energy system types. Each "
+                "country was chosen because it illustrates something that no other country "
+                "in the set demonstrates as clearly.",
+            ], className="mb-3", style={"lineHeight": "1.7", "color": "#495057"}),
+            html.P([
+                "Notable exclusions: Morocco was the 19th candidate but its flagship projects "
+                "are mostly in pre-deployment phases with limited operational data. The United "
+                "Kingdom is important but overlaps substantially with Denmark's wind industry "
+                "story. Bangladesh was analytically interesting (green factories on a fossil grid) "
+                "but had limited coverage in our dashboard data sources. Turkey has strong data "
+                "but its transition narrative overlaps with the Poland and Pakistan archetypes.",
+            ], className="mb-0", style={"lineHeight": "1.7", "color": "#495057"}),
+        ]),
+    ], className="shadow-sm mb-5")
+
+
+# ---------------------------------------------------------------------------
 # Page layout
 # ---------------------------------------------------------------------------
 
@@ -563,8 +589,8 @@ def layout(**kwargs):
                         className="display-5 fw-bold mt-4 mb-1",
                     ),
                     html.P(
-                        "Nineteen compelling energy transition stories from around the world — "
-                        "organized by the narrative themes that define how the global energy "
+                        "Eighteen compelling energy transition stories from around the world — "
+                        "organized into six narrative themes that define how the global energy "
                         "transition is actually unfolding on the ground.",
                         className="lead text-muted mb-2",
                     ),
@@ -586,14 +612,16 @@ def layout(**kwargs):
             # All theme sections
             *sections,
 
+            # "Why These 18 Countries?" justification section
+            _why_these_countries_section(),
+
             # Footer note
             html.Div([
                 html.Hr(),
                 html.P([
                     html.I(className="bi-info-circle me-1"),
                     "Country narratives synthesized from regional research (April 2026). "
-                    "Some countries appear in multiple themes to highlight different facets "
-                    "of their transition story. 'South Australia' uses national Australian data "
+                    "'South Australia' uses national Australian data "
                     "as a proxy — state-level data is not available in this dataset.",
                 ], className="small text-muted mb-4"),
                 dcc.Link(
